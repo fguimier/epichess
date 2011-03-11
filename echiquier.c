@@ -61,11 +61,11 @@ void                echiquier_init ( struct s_echiquier *e )
         e->mat[1][i].p = piece_create (blanc, pio);
 
         e->mat[6][i].p = piece_create (noir, pio);
-        if (initOrder [i] == roi)
+    /*    if (initOrder [i] == roi)
             e->mat[7][i].p = piece_create (noir, initOrder[i+1]);
         else if ( initOrder[i] == dame)
             e->mat[7][i].p = piece_create (noir, initOrder[i-1]);
-        else
+        else*/
             e->mat[7][i].p = piece_create (noir, initOrder[i]);
     }
 }
