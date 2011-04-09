@@ -19,7 +19,7 @@ struct s_echiquier  echiquier_create ( )
     p_piece                 p = NULL;
     enum color              col = blanc;
     struct s_echiquier      e;
-    
+
     for (i = 0; i < 8; i++)
     {
         for (j = 0; j < 8; j++)
@@ -32,8 +32,9 @@ struct s_echiquier  echiquier_create ( )
         }
         col = switchColor (col);
     }
+
     return e;
-    
+
 }
 
 /* renvoie le pointeur sur la piece a la case de ligne l et de colonne c
@@ -54,18 +55,63 @@ void                echiquier_init ( struct s_echiquier *e )
                         dame, fou, cavalier, tour};
     enum name               pio = pion;
     int                     i;
-    
+
     for (i = 0; i < 8; i++)
     {
         e->mat[0][i].p = piece_create (blanc, initOrder[i]);
-        e->mat[1][i].p = piece_create (blanc, pio);
-
-        e->mat[6][i].p = piece_create (noir, pio);
-    /*    if (initOrder [i] == roi)
-            e->mat[7][i].p = piece_create (noir, initOrder[i+1]);
-        else if ( initOrder[i] == dame)
-            e->mat[7][i].p = piece_create (noir, initOrder[i-1]);
-        else*/
-            e->mat[7][i].p = piece_create (noir, initOrder[i]);
+	e->mat[1][i].p = piece_create (blanc, pio);
+	e->mat[6][i].p = piece_create (noir, pio);
+	if (initOrder [i] == roi)
+	  e->mat[7][i].p = piece_create (noir, initOrder[i+1]);
+	else if ( initOrder[i] == dame)
+	  e->mat[7][i].p = piece_create (noir, initOrder[i-1]);
+	else
+	  e->mat[7][i].p = piece_create (noir, initOrder[i]);
     }
+}
+
+
+char printC (p_piece p)
+{
+	if (p->piece_color == blanc)
+		return 'W';
+		return 'B';
+	}
+	char printP (p_piece p)
+	{
+		if (p->piece_name == tour)
+		return 'T';
+	if (p->piece_name == cavalier)
+		return 'C';
+		if (p->piece_name == fou)
+	return 'F';
+		if (p->piece_name == dame)
+		return 'D';
+	if (p->piece_name == roi)
+		return 'R';
+	if (p->piece_name == pion)
+		return 'P';
+	return '\0';
+}
+
+void ech_print (struct s_echiquier *e)
+{
+	int             i, j, z;
+	p_piece         p = NULL;
+	for (i = 0; i < 8; i++)
+	{
+		for (z = 0; z < 8; z++) printf("_______");
+		printf("\n");
+		for (j = 0; j < 8; j++)
+		{
+			p = e->mat[i][j].p;
+			if (p)
+				printf ("| %c,%c |", printP(p), printC(p));
+			else
+				printf("|     |");
+			fflush(stdout);
+		}
+	printf("\n");
+	fflush(stdout);
+	}
 }
