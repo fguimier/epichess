@@ -139,19 +139,20 @@ struct s_case *check_case_sdl(int x, int y, struct s_echiquier *e)
   return NULL;
 }
 
-void colo_sdl(struct s_echiquier *e, struct s_deplace tab[])
+int colo_sdl(struct s_echiquier *e, struct s_deplace tab[])
 {
   size_t k = 0;
-  int i, j;
+  int i, j, count;
   SDL_Rect position;
 
-
+  count = 0;
   while (k < 60)
     {
       i = tab[k].hori;
       j = tab[k].verti;
       if (i != tab[59].hori || j != tab[59].verti)
 	{
+	    count++;
 	  SDL_FreeSurface(e->mat[i][j].sprite);
 	  e->mat[i][j].sprite =
 	    SDL_CreateRGBSurface(SDL_HWSURFACE, 50, 50, 32, 0, 0, 0, 0);
@@ -185,8 +186,14 @@ void colo_sdl(struct s_echiquier *e, struct s_deplace tab[])
       k++;
     }
   SDL_Flip(e->screen);
+  return count;
 }
 
+void marque_sdl(int x, int y, struct s_echiquier *e)
+{
+    x = y;
+    e = e;
+}
 
 void decolo_sdl (struct s_echiquier *e)
 {
