@@ -1,6 +1,7 @@
-#include <stdlib.h>
-#include <stdio.h>
+#ifndef BITBOARD_H_
+#define BITBOARD_H_
 
+typedef u_int64_t bitboard;
 
 /* deplacement et attaque des cavaliers */
 static inline bitboard deplace_knight_br( bitboard );
@@ -30,3 +31,5 @@ void print_ech (bitboard );
  * renvoie un bitboard avec les deplacement possibles
  */
 bitboard deplace_poss ( bitboard, bitboard (*fct)(bitboard), bitboard, bitboard );
+
+#endif
