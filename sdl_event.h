@@ -3,6 +3,8 @@
 
 #include <SDL/SDL.h>
 #include "sdl.h"
+#include "list.h"
+#include "pgn.h"
  
 void twoplayers(struct s_echiquier, SDL_Event);
 
