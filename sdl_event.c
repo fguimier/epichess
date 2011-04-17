@@ -7,10 +7,12 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
     struct s_case *cinipr = NULL; /*case initiale precedente*/
     struct s_deplace coup_pos[60];
     enum color joueur = blanc;
+    SDL_Surface *marque;
     /* sert a savoir si on click ou non */
     int click = 0;
     int continuer = 1;
 
+    marque = init_marque_sdl();
     while(continuer){
 
     /* attente d un evt */
@@ -104,6 +106,8 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
 			  else
 			    joueur = blanc;
 			  decolo_sdl(&e);
+			  marque_sdl((int)cini->num, ((int)cini->let)-65, &e,
+				     marque);
 			  cini = NULL;
 			}
 		    }
@@ -130,6 +134,8 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
 			      change_postion(&e, cfin->num, ((int)cfin->let)-65);
 			      printf("GO !\n");
 			      decolo_sdl(&e);
+			      marque_sdl((int)cinipr->num, 
+					 ((int)cinipr->let)-65, &e, marque);
 			      cini = NULL;
 			      if (joueur == blanc)
 				joueur = noir;
@@ -146,4 +152,5 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
 	    }
 	
     }
+    SDL_FreeSurface(marque);
 }
