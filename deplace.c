@@ -725,6 +725,7 @@ void grand_roque (struct s_echiquier *e, int l, int c)
 
 void deplacement (struct s_echiquier *e, int l_init, int c_init, int l_final, int c_final)
 {
+    printf("fuu\n");
 	  e->mat[l_final][c_final].p = e->mat[l_init][c_init].p;
 	  e->mat[l_init][c_init].p = NULL;
       ech_print(e);
