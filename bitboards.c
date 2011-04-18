@@ -3,7 +3,6 @@
 
 #include "bitboards.h"
 
-
 /* deplacement et attaque des cavaliers */
 static inline bitboard deplace_knight_br( bitboard x )
 {
@@ -99,18 +98,9 @@ bitboard deplace_poss (bitboard init, bitboard (*fct)(bitboard), bitboard l, bit
 
 int main ()
 {
-    bitboard b, poss, e;
+    bitboard b, e;
 	b = 0x02;
-	b = deplace_b(b);
-	e = deplace_b(b);
-	print_ech(b);
-	poss = deplace_poss(b, deplace_b, BOTT_L, e);
-	print_ech(poss);
-	poss |= deplace_poss(b, deplace_l, LEFT_L, e);
-	print_ech(poss);
-	poss |= deplace_poss(b, deplace_r, RIGHT_L, e);
-	print_ech(poss);
-	poss |= deplace_poss(b, deplace_f, TOP_L, e);
-	print_ech(poss);
+    e = BLACK_T; 
+    print_ech(e);
 	return 0;
 }
