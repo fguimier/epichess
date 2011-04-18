@@ -2,7 +2,7 @@
 #define __ECHIQUIER_H
 
 #include "pieces.h"
-
+#include "list.h"
 
 struct s_case
 {
