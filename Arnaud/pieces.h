@@ -18,3 +18,4 @@ struct s_piece
 /* constructeurs des pieces */
 p_piece   piece_create ( enum color, enum name );
 #endif
+
