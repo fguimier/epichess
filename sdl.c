@@ -195,13 +195,40 @@ SDL_Surface *init_marque_sdl()
 void marque_sdl(int x, int y, struct s_echiquier *e,SDL_Surface * s)
 {
     SDL_Rect pos;
-    
+
     pos.y = h * x;
     pos.x = h * y + deca;
-    
+
     SDL_BlitSurface(s, NULL, e->screen,
 		    &pos);
     SDL_Flip(e->screen);
+}
+
+void blit_dead_sdl(t_list dead, struct s_echiquier *e)
+{
+  SDL_Rect pos;
+  t_list copy = dead;
+  enum color c = ((struct s_piece*)dead->val)->piece_color;
+  printf("NYAH\n");
+  pos.y -= h;
+  while (copy)
+    {
+      if (((struct s_piece*)copy->val)->piece_color == c)
+	pos.y += h;
+      copy = copy->next;
+    }
+  if (((struct s_piece*)dead->val)->piece_color == blanc)
+    pos.x = 0;
+  else
+    pos.x = h * 8 + deca;
+  if (pos.y >= h * 8)
+    {
+      pos.y -= h * 8;
+      pos.x += h;
+    }
+  SDL_BlitSurface(((struct s_piece*)dead->val)->piece_sprite, NULL, e->screen,
+		  &pos);
+  SDL_Flip(e->screen);
 }
 
 void decolo_sdl (struct s_echiquier *e)

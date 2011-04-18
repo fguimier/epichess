@@ -64,7 +64,7 @@ int fill_tab(char **mem, int i, struct s_case *cini, struct s_case *cfin)
     char coup[30];
     int j = 0;
     int h = i;
-
+    
     if (mem[i])
 	{
 	    /*les blancs ont déjà joué*/
@@ -126,7 +126,7 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
     /* sert a savoir si on click ou non */
     int click = 0;
     int continuer = 1;
-
+    int mort = 0;
     marque = init_marque_sdl();
     dead = dead;
     while(continuer){
@@ -222,10 +222,15 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
 			{
 			  printf("Case bleue\n");
 			  i = fill_tab(mem, i, cini, cfin);
-			  deplacement(&e, cini->num, ((int)cini->let)-65,
+			  if (cfin->p)
+			    mort = 1;
+			  dead= deplacement(&e, cini->num, ((int)cini->let)-65,
 				      cfin->num, ((int)cfin->let)-65, dead);
 			  change_postion(&e, cini->num, ((int)cini->let)-65);
 			  change_postion(&e, cfin->num, ((int)cfin->let)-65);
+			  if (mort == 1)
+			    blit_dead_sdl(dead ,&e);
+			  mort = 0;
 			  printf("WTF ?\n");
 			  if (joueur == blanc)
 			    joueur = noir;
@@ -254,16 +259,22 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
 			      printf("Case bleue\n");
 			      i = fill_tab(mem, i, cinipr, cfin);
 			      printf("hmm\n");
-			      deplacement(&e, cinipr->num, 
+			      if (cfin->p)
+				mort = 1;
+			      dead = deplacement(&e, cinipr->num,
 					  ((int)cinipr->let)-65,
 					cfin->num, ((int)cfin->let)- 65, dead);
 			      printf("mmh\n");
-			      change_postion(&e, cinipr->num, 
+			      change_postion(&e, cinipr->num,
 					     ((int)cinipr->let)- 65);
-			      change_postion(&e, cfin->num, ((int)cfin->let)-65);
+			      change_postion(&e, cfin->num,
+					     ((int)cfin->let)-65);
 			      printf("GO !\n");
+			      if (mort)
+				blit_dead_sdl(dead ,&e);
+			      mort = 0;
 			      decolo_sdl(&e);
-			      marque_sdl((int)cinipr->num, 
+			      marque_sdl((int)cinipr->num,
 					 ((int)cinipr->let)-65, &e, marque);
 			      cini = NULL;
 			      if (joueur == blanc)
