@@ -223,7 +223,7 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
 			  printf("Case bleue\n");
 			  i = fill_tab(mem, i, cini, cfin);
 			  deplacement(&e, cini->num, ((int)cini->let)-65,
-				      cfin->num, ((int)cfin->let)-65);
+				      cfin->num, ((int)cfin->let)-65, dead);
 			  change_postion(&e, cini->num, ((int)cini->let)-65);
 			  change_postion(&e, cfin->num, ((int)cfin->let)-65);
 			  printf("WTF ?\n");
@@ -253,9 +253,11 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
 			    {
 			      printf("Case bleue\n");
 			      i = fill_tab(mem, i, cinipr, cfin);
+			      printf("hmm\n");
 			      deplacement(&e, cinipr->num, 
 					  ((int)cinipr->let)-65,
-					  cfin->num, ((int)cini->let)- 65);
+					cfin->num, ((int)cfin->let)- 65, dead);
+			      printf("mmh\n");
 			      change_postion(&e, cinipr->num, 
 					     ((int)cinipr->let)- 65);
 			      change_postion(&e, cfin->num, ((int)cfin->let)-65);

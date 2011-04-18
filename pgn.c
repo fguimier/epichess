@@ -40,7 +40,11 @@ void pgn_out(char **mem, char *filename)
 			}
 		}
 	    if (!mem[i])
+	      {
+		/*for (; h < 80;h++)
+		  coup[h] = 0;*/
 		fwrite(coup,1,h,out);
+	      }
 	    else
 		{
 		    h--;
@@ -49,10 +53,10 @@ void pgn_out(char **mem, char *filename)
 		    fwrite(coup,1,h+1,out);
 		    n = 0;
 		    for (; h < 80; h++)
-			{
-			    coup[n] = coup[h];
-			    n++;
-			}
+		      {
+			coup[n] = coup[h];
+			n++;
+		      }
 		    h = n;
 		}
 	}
