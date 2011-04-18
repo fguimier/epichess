@@ -28,30 +28,30 @@ void deplace_pos_possible (struct s_echiquier *e, int l, int c, struct s_deplace
 
       if (e->mat[l][c].p->piece_color == blanc)
 	{
-	  if (l+1 <= 7 && (c+1 <= 7 || c-1 >= 0))
+	  if (l+1 <= 7)
 	    {
-	      if (e->mat[l+1][c+1].p != NULL &&  e->mat[l+1][c+1].p->piece_color != e->mat[l][c].p->piece_color)
+	      if (c+1 <= 7 &&e->mat[l+1][c+1].p != NULL &&  e->mat[l+1][c+1].p->piece_color == noir)
 		{
 		  pos_possible[0].verti = (pos_possible[0].verti + 1);
 		  pos_possible[0].hori = (pos_possible[0].hori + 1);
 		}
-	      if (e->mat[l+1][c-1].p != NULL &&  e->mat[l+1][c-1].p->piece_color != e->mat[l][c].p->piece_color)
+	      if (c-1 >= 0 &&e->mat[l+1][c-1].p != NULL &&  e->mat[l+1][c-1].p->piece_color == noir)
 		{
 		  pos_possible[1].verti = (pos_possible[1].verti - 1);
-	      pos_possible[1].hori = (pos_possible[1].hori + 1);
+		  pos_possible[1].hori = (pos_possible[1].hori + 1);
 		}
 	    }
 	}
       if (e->mat[l][c].p->piece_color == noir)
 	{
-	  if (l-1 >= 0 && (c+1 <= 7 || c-1 >=0))
+	  if (l-1 >= 0)
 	    {
-	      if (e->mat[l-1][c-1].p != NULL && e->mat[l-1][c-1].p->piece_color != e->mat[l][c].p->piece_color)
+	      if (c-1 >= 0 && e->mat[l-1][c-1].p != NULL && e->mat[l-1][c-1].p->piece_color == blanc)
 		{
 		  pos_possible[2].verti = (pos_possible[2].verti - 1);
 		  pos_possible[2].hori = (pos_possible[2].hori - 1);
 		}
-	      if (e->mat[l-1][c+1].p != NULL && e->mat[l-1][c+1].p->piece_color != e->mat[l][c].p->piece_color)
+	      if (c+1 <= 7 && e->mat[l-1][c+1].p != NULL && e->mat[l-1][c+1].p->piece_color == blanc)
 		{
 		  pos_possible[3].verti = (pos_possible[3].verti + 1);
 		  pos_possible[3].hori = (pos_possible[3].hori - 1);
@@ -79,7 +79,7 @@ void deplace_pos_possible (struct s_echiquier *e, int l, int c, struct s_deplace
 	}
       else
 	{
-	  if (l+1 <= 7 || l-1 >= 0)
+	  if (l+1 <= 7 && l-1 >= 0)
 	    {
 	      if ((e->mat[l+1][c].p == NULL && e->mat[l][c].p->piece_color == blanc) || (e->mat[l-1][c].p == NULL && e->mat[l][c].p->piece_color == noir))
 		{
@@ -248,7 +248,7 @@ void deplace_pos_possible (struct s_echiquier *e, int l, int c, struct s_deplace
           else if (e->mat[l+j][c-j].p->piece_color != e->mat[l][c].p->piece_color)
             {
               pos_possible[i].hori = (pos_possible[i].hori + j) ;
-              pos_possible[i].verti = (pos_possible[i].verti + j) ;
+              pos_possible[i].verti = (pos_possible[i].verti - j) ;
               break;
             }
 	    else
