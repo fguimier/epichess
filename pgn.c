@@ -17,12 +17,10 @@ void pgn_out(char **mem, char *filename)
     fwrite("[Event \"Joueur, 2\"]\n",1,20,out);
     fwrite("[Result \"*\"]\n",1,13,out);
     fwrite("\n",1,1,out);
-
+    h = 0;
     /* corps */
     while (mem[i])
 	{
-	    printf("%s",mem[i]);
-	    h = 0;
 	    while (h < 80)
 		{
 		    if (mem[i][j])
@@ -51,7 +49,9 @@ void pgn_out(char **mem, char *filename)
 		    while (coup[h] != ' ')
 			h--;
 		    fwrite(coup,1,h+1,out);
+		    fwrite("\n",1,1,out);
 		    n = 0;
+		    h++;
 		    for (; h < 80; h++)
 		      {
 			coup[n] = coup[h];
