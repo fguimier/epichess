@@ -5,68 +5,68 @@
 
 
 /* deplacement et attaque des cavaliers */
-static inline bitboard deplace_knight_br( bitboard x ) 
+static inline bitboard deplace_knight_br( bitboard x )
 {
 	return x<<17;
 }
-static inline bitboard deplace_knight_bl( bitboard x ) 
+static inline bitboard deplace_knight_bl( bitboard x )
 {
 	return x<<15;
 }
-static inline bitboard deplace_knight_fr( bitboard x ) 
+static inline bitboard deplace_knight_fr( bitboard x )
 {
 	return x>>15;
 }
-static inline bitboard deplace_knight_fl( bitboard x ) 
+static inline bitboard deplace_knight_fl( bitboard x )
 {
 	return x>>17;
 }
-static inline bitboard deplace_knight_rb( bitboard x ) 
+static inline bitboard deplace_knight_rb( bitboard x )
 {
 	return x<<10;
 }
-static inline bitboard deplace_knight_lb( bitboard x ) 
+static inline bitboard deplace_knight_lb( bitboard x )
 {
 	return x<<6;
 }
-static inline bitboard deplace_knight_rf( bitboard x ) 
+static inline bitboard deplace_knight_rf( bitboard x )
 {
 	return x>>6;
 }
-static inline bitboard deplace_knight_lf( bitboard x ) 
+static inline bitboard deplace_knight_lf( bitboard x )
 {
 	return x>>10;
 }
 /* deplacements et attaques du generaux */
-static inline bitboard deplace_r( bitboard x ) 
+static inline bitboard deplace_r( bitboard x )
 {
 	return x<<1;
 }
-static inline bitboard deplace_l( bitboard x ) 
+static inline bitboard deplace_l( bitboard x )
 {
 	return x>>1;
 }
-static inline bitboard deplace_b( bitboard x ) 
+static inline bitboard deplace_b( bitboard x )
 {
 	return x<<8;
 }
-static inline bitboard deplace_f( bitboard x ) 
+static inline bitboard deplace_f( bitboard x )
 {
 	return x>>8;
 }
-static inline bitboard deplace_br( bitboard x ) 
+static inline bitboard deplace_br( bitboard x)
 {
 	return x<<9;
 }
-static inline bitboard deplace_bl( bitboard x ) 
+static inline bitboard deplace_bl( bitboard x )
 {
 	return x<<7;
 }
-static inline bitboard deplace_fr( bitboard x ) 
+static inline bitboard deplace_fr( bitboard x )
 {
 	return x>>7;
 }
-static inline bitboard deplace_fl( bitboard x ) 
+static inline bitboard deplace_fl( bitboard x )
 {
 	return x>>9;
 }
@@ -87,10 +87,10 @@ void print_ech (bitboard b)
         else
             printf("0 ");
     }
-    printf("\n"); 
+    printf("\n");
 }
 bitboard deplace_poss (bitboard init, bitboard (*fct)(bitboard), bitboard l, bitboard e)
-{	
+{
 	if ((init | l) == l || (init | e) == e)
 		return init;
 	init = fct(init);
