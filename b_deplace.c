@@ -5,10 +5,30 @@
 
 #include "b_deplace.h"
 
+bitboard dep_queen (bitboard init,  bitboard e, bitboard a)
+{
+    bitboard poss;
+    poss = deplace_poss (init, deplace_b, e | BOTT_B, a);
+    print_ech(poss);
+    poss |= deplace_poss (init, deplace_f, e | TOP_B, a);
+    print_ech(poss);
+    poss |= deplace_poss (init, deplace_r, e | RIGHT_B, a);
+    print_ech(poss);
+    poss |= deplace_poss (init, deplace_l, e | LEFT_B, a);
+    print_ech(poss);
+    poss |= deplace_poss (init, deplace_br, e | BOTT_B | RIGHT_B, a);
+    print_ech(poss);
+    poss |= deplace_poss (init, deplace_bl, e | BOTT_B | LEFT_B, a);
+    print_ech(poss);
+    poss |= deplace_poss (init, deplace_fr, e | TOP_B | RIGHT_B, a);
+    print_ech(poss);
+    poss |= deplace_poss (init, deplace_fl, e | TOP_B | LEFT_B, a);
+    return ((~init) & poss);
+}
+
 bitboard deplace_poss (bitboard init, bitboard (*fct)(bitboard), bitboard l, bitboard a)
 {
-    a=a;
-	if ((init | l) == l)
+	if ((init & l) || (fct(init) & a))
 		return init;
 	init = fct(init);
 	return init | deplace_poss(init, fct, l, a);

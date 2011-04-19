@@ -16,4 +16,6 @@
  */
 bitboard deplace_poss ( bitboard, bitboard (*fct)(bitboard), bitboard, bitboard );
 bitboard deplace_pawn (bitboard, bitboard, bitboard, int);
+bitboard dep_queen (bitboard,  bitboard, bitboard);
+
 #endif 

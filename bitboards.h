@@ -18,8 +18,8 @@ struct s_bb {
 /* definition des bordures de l'echiquier */
 #define RIGHT_B     0x8080808080808080
 #define LEFT_B      0x0101010101010101
-#define TOP_B       0x00000000000000FF
-#define BOTT_B      0XFF00000000000000
+#define BOTT_B      0x00000000000000FF
+#define TOP_B       0XFF00000000000000
 #define ROUND_B (RIGHT_B | LEFT_B | TOP_B | BOTT_B)
 
 /* pieces blanches de bases */
@@ -80,6 +80,7 @@ bitboard deplace_fr( bitboard );
 bitboard deplace_fl( bitboard );
 
 /* fonction qui affiche l echiquier */
+bitboard get_case (int, int);
 void print_ech (bitboard );
 void populate (struct s_bb *, int);
 

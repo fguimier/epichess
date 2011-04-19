@@ -3,7 +3,7 @@
 
 #include "pieces.h"
 #include "list.h"
-
+#include "bitboards.h"
 struct s_case
 {
     p_piece                 p;
