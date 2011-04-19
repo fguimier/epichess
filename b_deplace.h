@@ -15,7 +15,10 @@
  * renvoie un bitboard avec les deplacement possibles
  */
 bitboard deplace_poss ( bitboard, bitboard (*fct)(bitboard), bitboard, bitboard );
-bitboard deplace_pawn (bitboard, bitboard, bitboard, int);
+bitboard dep_pawn (bitboard, bitboard, bitboard, int);
 bitboard dep_queen (bitboard,  bitboard, bitboard);
+bitboard dep_rook (bitboard,  bitboard, bitboard);
+bitboard dep_bishop (bitboard,  bitboard, bitboard);
+bitboard dep_king (bitboard, bitboard);
 
 #endif 
