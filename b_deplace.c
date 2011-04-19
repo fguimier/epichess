@@ -35,14 +35,28 @@ bitboard dep_bishop (bitboard init,  bitboard e, bitboard a)
     poss |= deplace_poss (init, deplace_fl, e | TOP_B | LEFT_B, a);
     return ((~init) & poss);
 }
-bitboard deplace_poss (bitboard init, bitboard (*fct)(bitboard), bitboard l, bitboard a)
+bitboard dep_king (bitboard init, bitboard a)
 {
-	if ((init & l) || (fct(init) & a))
-		return init;
-	init = fct(init);
-	return init | deplace_poss(init, fct, l, a);
+    bitboard poss = 0x00;
+    if (deplace_b(init) & a)
+        poss |= deplace_b(init);
+    if (deplace_f(init) & a)
+        poss |= deplace_f(init);
+    if (deplace_r(init) & a)
+        poss |= deplace_r(init);
+    if (deplace_l(init) & a)
+        poss |= deplace_l(init);
+    if (deplace_br(init) & a)
+        poss |= deplace_br(init);
+    if (deplace_bl(init) & a)
+        poss |= deplace_bl(init);
+    if (deplace_fr(init) & a)
+        poss |= deplace_fr(init);
+    if (deplace_fl(init) & a)
+        poss |= deplace_fl(init);
+    return poss;
 }
-bitboard deplace_pawn (bitboard init, bitboard l, bitboard a, int col)
+bitboard dep_pawn (bitboard init, bitboard l, bitboard a, int col)
 {
     bitboard        place, lim;
     if (col)
@@ -63,5 +77,12 @@ bitboard deplace_pawn (bitboard init, bitboard l, bitboard a, int col)
             lim = init >> 8;
         return  deplace_poss(init, deplace_f, lim | l, a);
     }
+}
+bitboard deplace_poss (bitboard init, bitboard (*fct)(bitboard), bitboard l, bitboard a)
+{
+	if ((init & l) || (fct(init) & a))
+		return init;
+	init = fct(init);
+	return init | deplace_poss(init, fct, l, a);
 }
 
