@@ -47,27 +47,27 @@ inline bitboard deplace_l( bitboard x )
 }
 inline bitboard deplace_b( bitboard x )
 {
-	return x<<8;
+	return x>>8;
 }
 inline bitboard deplace_f( bitboard x )
 {
-	return x>>8;
+	return x<<8;
 }
 inline bitboard deplace_br( bitboard x)
 {
-	return x<<9;
+	return x>>7;
 }
 inline bitboard deplace_bl( bitboard x )
 {
-	return x<<7;
+	return x>>9;
 }
 inline bitboard deplace_fr( bitboard x )
 {
-	return x>>7;
+	return x<<9;
 }
 inline bitboard deplace_fl( bitboard x )
 {
-	return x>>9;
+	return x<<7;
 }
 
 
@@ -99,10 +99,22 @@ void print_ech (bitboard b)
     }
     printf ("\n");
 }
+bitboard get_case (int c, int l)
+{
+    bitboard b = 0x00;
+    if (l < 8 && c < 8)
+    {    
+        b = 0x01;
+        b = b << l;
+        b = b << (8 * c);
+    }
+    return b;
+}
 
 void pop_white (struct s_bb *tb)
 {
     int             i = 1;
+    tb->color = WHITE;
     tb->pieces[0] = 0x00;
     tb->pieces[1] = WHITE_P1;
     tb->pieces[2] = WHITE_P2;
@@ -126,6 +138,7 @@ void pop_white (struct s_bb *tb)
 void pop_black (struct s_bb *tb)
 {
     int             i = 1;
+    tb->color = BLACK;
     tb->pieces[0] = 0x00;
     tb->pieces[1] = BLACK_P1;
     tb->pieces[2] = BLACK_P2;
