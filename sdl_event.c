@@ -115,7 +115,7 @@ int fill_tab(char **mem, int i, struct s_case *cini, struct s_case *cfin)
 void twoplayers(struct s_echiquier e, SDL_Event event)
 {
     int i = 1;
-    bitboard        que = WHITE_Q, poss;
+    bitboard        que = WHITE_P2, poss;
     struct s_bb     bb_bl, bb_wh;
     struct s_case *cini = NULL;
     struct s_case *cfin = NULL;
@@ -133,9 +133,8 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
     populate (&bb_wh, WHITE);
     marque = init_marque_sdl();
     dead = dead;
-    print_ech (~que);
-
-    poss = dep_queen(que, 0x00, 0x00);
+    print_ech (que);
+    poss = dep_pawn(que, bb_bl.pieces[0], bb_wh.pieces[0], WHITE);
     print_ech(poss);
     while(continuer){
     /* attente d un evt */
