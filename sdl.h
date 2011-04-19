@@ -7,7 +7,7 @@
 #include "echiquier.h"
 #include "deplace.h"
 
-void init_sdl(struct s_echiquier *);
+void init_sdl(struct s_echiquier *, SDL_Surface *ecran);
 void init_piece_sdl(struct s_echiquier *, int, int);
 void change_postion(struct s_echiquier *, int, int);
 void reset(struct s_echiquier *);
