@@ -8,13 +8,13 @@
 #define deca 120
 
 /* initialise la sdl et charge toutes les sprites sauf les pieces */
-void init_sdl(struct s_echiquier *e)
+void init_sdl(struct s_echiquier *e, SDL_Surface *ecran)
 {
   size_t i, j;
   SDL_Rect position;
 
-  SDL_Init(SDL_INIT_VIDEO);
-  e->screen = SDL_SetVideoMode(640, 640, 32, SDL_HWSURFACE);
+  
+  e->screen = ecran;
   SDL_FillRect(e->screen, NULL, SDL_MapRGB(e->screen->format, 100, 100, 100));
 
   for (i = 0; i < 8; i++)
