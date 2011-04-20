@@ -3,6 +3,8 @@
 
 #include "pieces.h"
 #include "list.h"
+#include "bitboards.h"
+#include "b_deplace.h"
 
 struct s_case
 {
