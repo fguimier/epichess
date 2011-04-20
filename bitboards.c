@@ -4,35 +4,35 @@
 #include "bitboards.h"
 
 /* deplacement et attaque des cavaliers */
-inline bitboard deplace_knight_br( bitboard x )
+inline bitboard deplace_knight_fr( bitboard x )
 {
 	return x<<17;
 }
-inline bitboard deplace_knight_bl( bitboard x )
+inline bitboard deplace_knight_fl( bitboard x )
 {
 	return x<<15;
 }
-inline bitboard deplace_knight_fr( bitboard x )
+inline bitboard deplace_knight_br( bitboard x )
 {
 	return x>>15;
 }
-inline bitboard deplace_knight_fl( bitboard x )
+inline bitboard deplace_knight_bl( bitboard x )
 {
 	return x>>17;
 }
-inline bitboard deplace_knight_rb( bitboard x )
+inline bitboard deplace_knight_rf( bitboard x )
 {
 	return x<<10;
 }
-inline bitboard deplace_knight_lb( bitboard x )
+inline bitboard deplace_knight_lf( bitboard x )
 {
 	return x<<6;
 }
-inline bitboard deplace_knight_rf( bitboard x )
+inline bitboard deplace_knight_rb( bitboard x )
 {
 	return x>>6;
 }
-inline bitboard deplace_knight_lf( bitboard x )
+inline bitboard deplace_knight_lb( bitboard x )
 {
 	return x>>10;
 }
