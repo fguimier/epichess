@@ -8,17 +8,17 @@
 #include "sdl.h"
 #include "sdl_event.h"
 
-int main ()
+int shellmon (SDL_Surface *patamon)
 {
     struct s_echiquier            e;
     size_t i,j;
     SDL_Event event;
 
-    e = echiquier_create();
+    e = echiquier_create(patamon);
     echiquier_init ( &e );
 
     /* code de flo */
-    init_sdl(&e);
+    init_sdl(&e, patamon);
     /* init de la place des pieces*/
     for (i = 0; i < 8;i++)
       for (j = 0; j < 2;j++)

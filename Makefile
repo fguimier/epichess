@@ -2,7 +2,7 @@ CC= gcc
 CFLAGS=-g -Wall -W -pedantic -Werror -ansi -D_XOPEN_SOURCE=500 -lSDL -lSDL_image
 EXEC=prog
 
-SOURCES= list.c pieces.c echiquier.c pgn.c deplace.c sdl.c sdl_event.c main.c
+SOURCES= list.c pieces.c echiquier.c pgn.c deplace.c sdl.c sdl_event.c main.c gui_tmp.c
 HEADERS= ${SOURCES:.c=.h}
 OBJECTS= ${SOURCES:.c=.o}
 
