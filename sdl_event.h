@@ -5,6 +5,7 @@
 #include "sdl.h"
 #include "list.h"
 #include "pgn.h"
+#include "pgn_read.h"
  
 void twoplayers(struct s_echiquier, SDL_Event);
 

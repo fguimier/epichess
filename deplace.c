@@ -698,6 +698,8 @@ void deplace_pos_possible (struct s_echiquier *e, int l, int c, struct s_deplace
 
 void petit_roque (struct s_echiquier *e, int l, int c)
 {
+    e=e;l=l;c=c;
+/*
   if (e->mat[l][c].p->piece_color == blanc)
     {
       e->mat[l][c].p = NULL ;
@@ -713,11 +715,13 @@ void petit_roque (struct s_echiquier *e, int l, int c)
 
       e->mat[l][c-3].p = NULL;
       e->mat[l][c-1].p = piece_create (noir, tour);
-    }
+      }*/
 }
 
 void grand_roque (struct s_echiquier *e, int l, int c)
 {
+    e=e;l=l;c=c;
+/*
   if (e->mat[l][c].p->piece_color == blanc)
     {
       e->mat[l][c].p = NULL ;
@@ -733,7 +737,7 @@ void grand_roque (struct s_echiquier *e, int l, int c)
 
       e->mat[l][c-4].p = NULL;
       e->mat[l][c-1].p = piece_create (noir, tour);
-    }
+      }*/
 }
 
 t_list deplacement (struct s_echiquier *e, int l_init, int c_init, int l_final, int c_final, t_list dead)

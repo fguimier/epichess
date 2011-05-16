@@ -2,7 +2,7 @@ CC= gcc
 CFLAGS=-g -Wall -W -pedantic -Werror -std=c99 -D_XOPEN_SOURCE=500 -lSDL -lSDL_image
 EXEC=prog
 
-SOURCES= bitboards.c b_deplace.c list.c pieces.c echiquier.c pgn.c deplace.c sdl.c sdl_event.c main.c gui_tmp.c
+SOURCES= bitboards.c b_deplace.c list.c pieces.c echiquier.c pgn.c pgn_read.c deplace.c sdl.c sdl_event.c main.c gui_tmp.c
 HEADERS= ${SOURCES:.c=.h}
 OBJECTS= ${SOURCES:.c=.o}
 
