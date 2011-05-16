@@ -16,9 +16,10 @@ struct s_piece
   enum name               piece_name;
   enum color              piece_color;
   SDL_Surface               *piece_sprite;
+    int num;
 };
 
 
 /* constructeurs des pieces */
-p_piece   piece_create ( enum color, enum name );
+p_piece   piece_create ( enum color, enum name, int);
 #endif
