@@ -3,7 +3,8 @@
 
 #include "echiquier.h"
 
-t_list search_tower(struct s_echiquier *e, struct s_case *cas, enum color colo,
-                    struct s_bb *bb_bl, struct s_bb *bb_wh);
+t_list search_tower(struct s_echiquier *e, struct s_case *cini,
+		    struct s_case *cfin, enum color colo,
+		    struct s_bb *bb_bl, struct s_bb *);
 
 #endif

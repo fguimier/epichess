@@ -89,6 +89,8 @@ int main()
 	  if ((click.button.x >= pnew.x)&&(click.button.x <= pnew.x+LO)&&(click.button.y >= pnew.y)&&(click.button.y <= pnew.y+LA))
 	    {
 	    shellmon(ecran);
+	    /*ptêt un peu crade...*/
+	    continuer = 0;
 	    refresh = 0;
 	    }
 	  else if ((click.button.x >= psave.x)&&(click.button.x <= psave.x+LO)&&(click.button.y >= psave.y)&&(click.button.y <= psave.y+LA))

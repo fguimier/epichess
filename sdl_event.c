@@ -7,45 +7,46 @@ int fill_depl(char *coup, int i, struct s_case *init, struct s_case *cfin,
   t_list c, l;/*contiennent les cases dont les Colones ou les Lignes snt ==*/
 
   c=l=NULL;
-  if (pos)/*a delete*/
-    {
-	c = add(init, c);
-	l = add(init, l);
-      pos = pos->next;
-    }
-  if (j > 1)
+  c = add(cfin, c);
+  l = add(cfin, l);
+  printf("%i doublons\n",j);
+  if (j > 0)
     {
       while (pos)
 	{
-	    if (((struct s_case*)(c->val))->num ==
+	    printf("%c,%i-%c,%i\n",((struct s_case*)(c->val))->let,
+		   ((struct s_case*)(l->val))->num,
+		   ((struct s_case*)(pos->val))->let,((struct s_case*)(pos->val))->num);
+	    if (((struct s_case*)(l->val))->num ==
 		((struct s_case*)(pos->val))->num)
-		add(c, pos->val);
-	    if (((struct s_case*)(l->val))->let == 
+		l = add(pos->val, l);
+	    if (((struct s_case*)(c->val))->let == 
 		((struct s_case*)(pos->val))->let)
-		add(l, pos->val);
+		c = add(pos->val, c);
 	    pos = pos->next;
 	}
     }
+  printf("%i col ident ; %i lign ident",length(c),length(l));
   if (length(c) >1 || length(l) >1)
     {
       if (length(l) == 1)
 	{
 	  i++;/*c > 1*/
-	  coup[i] = cfin->num + 48;
+	  coup[i] = 8 - init->num + 48;
 	}
       else
 	{
 	  if (length(c) == 1)
 	    {
 	      i++;/*l > 1*/
-	      coup[i] = cfin->let + 32;
+	      coup[i] = init->let + 32;
 	    }
 	  else
 	    {
 	      i++;
-	      coup[i] = cfin->num + 48;
+	      coup[i] = 8 - init->num + 48;
 	      i++;
-	      coup[i] = cfin->let + 32;
+	      coup[i] = init->let + 32;
 	    }
 	}
     }
@@ -78,7 +79,8 @@ int fill_coup(struct s_echiquier *e, char *coup, int i, struct s_case *cini,
 	    break;
 	case tour :
 	    coup[i] = 'R';
-            pos = search_tower(e, cini, cini->p->piece_color, bb_bl, bb_wh);
+            pos = search_tower(e, cini, cfin, cini->p->piece_color, 
+			       bb_bl, bb_wh);
 	    i = fill_depl(coup, i, cini, cfin, pos);
             break;
 	case cavalier :
@@ -88,7 +90,7 @@ int fill_coup(struct s_echiquier *e, char *coup, int i, struct s_case *cini,
             i = fill_depl(coup, i, cini, cfin, pos);
             break;
 	case fou :
-            coup[i] = 'N';
+            coup[i] = 'B';
             /*recherche d'ambiguité ignorée pour le moment*/
 	    
             i = fill_depl(coup, i, cini, cfin, pos);
@@ -170,22 +172,22 @@ void update_b(struct s_bb *bb_bl, struct s_bb *bb_wh, struct s_case *cini,
     blanc & avec les noirs ->*/
     bitboard fin = get_case(7-cfin->num,(cfin->let-65));
     bitboard cin = get_case(7-cini->num,(cini->let-65));
-  print_ech(cin);
+    /*print_ech(cin);
   print_ech(fin);
-  printf("%i,%c\n",cini->num, cini->let);
+  printf("%i,%c\n",cini->num, cini->let);*/
   int i = 1;
   int j = 1;
   if (cini->p->piece_color == blanc)
     {
       while (bb_wh->pieces[i] != cin)
 	  {
-	      print_ech(bb_wh->pieces[i]);
+	      /*print_ech(bb_wh->pieces[i]);*/
 	      i++;
 	  }
-      printf("B %i\n",i);
+      /*printf("B %i\n",i);*/
       bb_wh->pieces[0] = bb_wh->pieces[0] & ~bb_wh->pieces[i];
       bb_wh->pieces[0] = bb_wh->pieces[0] | fin;
-      print_ech(bb_wh->pieces[0]);
+      /*print_ech(bb_wh->pieces[0]);*/
       if (cfin->p)
 	{
 	  while (bb_bl->pieces[j] != fin)
@@ -194,25 +196,25 @@ void update_b(struct s_bb *bb_bl, struct s_bb *bb_wh, struct s_case *cini,
 	  bb_bl->pieces[0]=bb_bl->pieces[0] & ~fin;
 	}
       bb_wh->pieces[i] = fin;
-      printf("%i\n",i);
+      /* printf("%i\n",i);*/
     }
   else
       {
 	  while (bb_bl->pieces[i] != cin)
 	      {
-		  print_ech(bb_bl->pieces[i]);
+		  /*  print_ech(bb_bl->pieces[i]);*/
 		  i++;
 	      }
-	  printf("N %i\n",i);
+/*	  printf("N %i\n",i);*/
 	  bb_bl->pieces[0] = bb_bl->pieces[0] & ~bb_bl->pieces[i];
 	  bb_bl->pieces[0] = bb_bl->pieces[0] | fin;
-	  print_ech(bb_bl->pieces[0]);
+	  /* print_ech(bb_bl->pieces[0]);*/
 	  if (cfin->p)
 	      {
 		  while (bb_wh->pieces[j] != fin)
 		      j++;
 		  bb_wh->pieces[j]= 0x0000000000000000;
-		  bb_wh->pieces[0]=bb_bl->pieces[0] & ~fin;
+		  bb_wh->pieces[0]=bb_wh->pieces[0] & ~fin;
 	      }
 	  bb_bl->pieces[i] = fin;
       }
@@ -323,6 +325,13 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
 	    {
 	      click = 0;
 	      cfin = check_case_sdl(event.button.x, event.button.y, &e);
+	      if (cfin == NULL)
+		  {
+		      cinipr = NULL;
+		      cini = NULL;
+		      decolo_sdl(&e);
+		  }
+	      else
 	      if (cinipr == NULL)
 		{
 		  printf("on a clique sur 1 case\n");
@@ -375,6 +384,8 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
 			  else
 			    {
 			      printf("Case bleue\n");
+			      if (!cfin)
+				  printf("lol\n");
 			      i = fill_tab(&e, mem, i, cinipr, cfin,
 					   &bb_bl, &bb_wh);
 			      printf("hmm\n");
