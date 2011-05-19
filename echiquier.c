@@ -27,6 +27,7 @@ struct s_echiquier  echiquier_create ( )
             e.mat[i][j].p = p;
             e.mat[i][j].c = col;
             e.mat[i][j].num = i;
+	    e.mat[i][j].bleu = blanc;
             e.mat[i][j].let = 'A' + j;
             col = switchColor (col);
         }
