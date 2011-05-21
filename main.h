@@ -1,1 +1,1 @@
-int shellmon();
+int shellmon (SDL_Surface *patamon);

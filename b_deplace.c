@@ -19,7 +19,6 @@ bitboard dep_knight (bitboard init, bitboard a)
     poss |= deplace_knight_lb(init);
     poss |= deplace_knight_rf(init);
     poss |= deplace_knight_lf(init);
-    print_ech(poss & ~a);
     return poss & ~a;
 }
 bitboard dep_queen (bitboard init,  bitboard e, bitboard a)
@@ -33,7 +32,6 @@ bitboard dep_queen (bitboard init,  bitboard e, bitboard a)
     poss |= deplace_poss (init, deplace_bl, e | BOTT_B | LEFT_B, a);
     poss |= deplace_poss (init, deplace_fr, e | TOP_B | RIGHT_B, a);
     poss |= deplace_poss (init, deplace_fl, e | TOP_B | LEFT_B, a);
-    print_ech((~init) & poss);
     return ((~init) & poss);
 }
 bitboard dep_rook (bitboard init,  bitboard e, bitboard a)
@@ -43,7 +41,6 @@ bitboard dep_rook (bitboard init,  bitboard e, bitboard a)
     poss |= deplace_poss (init, deplace_f, e | TOP_B, a);
     poss |= deplace_poss (init, deplace_r, e | RIGHT_B, a);
     poss |= deplace_poss (init, deplace_l, e | LEFT_B, a);
-    print_ech((~init) & poss);
     return ((~init) & poss);
 }
 bitboard dep_bishop (bitboard init,  bitboard e, bitboard a)
@@ -53,7 +50,6 @@ bitboard dep_bishop (bitboard init,  bitboard e, bitboard a)
     poss |= deplace_poss (init, deplace_bl, e | BOTT_B | LEFT_B, a);
     poss |= deplace_poss (init, deplace_fr, e | TOP_B | RIGHT_B, a);
     poss |= deplace_poss (init, deplace_fl, e | TOP_B | LEFT_B, a);
-    print_ech((~init) & poss);
     return ((~init) & poss);
 }
 bitboard dep_king (bitboard init, bitboard a)
@@ -67,7 +63,6 @@ bitboard dep_king (bitboard init, bitboard a)
     poss |= deplace_bl(init);
     poss |= deplace_fr(init);
     poss |= deplace_fl(init);
-    print_ech(poss & ~a);
     return poss & ~a;
 }
 bitboard dep_pawn (bitboard init, bitboard e, bitboard a, int col)
@@ -103,7 +98,6 @@ bitboard dep_pawn (bitboard init, bitboard e, bitboard a, int col)
                 poss |= deplace_b(init);
             }  
     }
-    print_ech(poss & ~a);
     return poss & ~a;
 }
 bitboard deplace_poss (bitboard init, bitboard (*fct)(bitboard), bitboard l, bitboard a)
@@ -152,4 +146,14 @@ void calc_all_dep (struct s_bb *white, struct s_bb *black)
     calc_dep (black,white->pieces[0]);
 }
 
+int check(struct s_bb *tocheck, struct s_bb *ennemy)
+{
+    return tocheck->pieces[16] & ennemy->possib[0];
+}
 
+int checkmate (struct s_bb *tocheck, struct s_bb *ennemy)
+{
+    if (!(tocheck->possib[16] & ~ennemy->possib[0]))
+        return 0;
+    return 1;
+}
