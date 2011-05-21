@@ -1,15 +1,10 @@
 #include "gui.h"
-#include "echiquier.h"
-#include "pieces.h"
-#include "deplace.h"
-#include "sdl.h"
-#include "sdl_event.h"
-#include "main.h"
+
 
 #define LO 85
 #define LA 28
 
-int main()
+int gui()
 {
   SDL_Surface *ecran = NULL, *fond = NULL, *new = NULL, *load = NULL, *save = NULL, *quit = NULL, *level = NULL, *easy = NULL, *medium = NULL, *hard = NULL ;
   SDL_Rect pnew, pload, psave, pquit, plevel, peasy, pmedium, phard, pfond;
