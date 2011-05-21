@@ -6,13 +6,6 @@
 #define B_DEPLACE_H_
 
 #include "bitboards.h"
-typedef struct s_forth *forth;
-struct s_forth
-{
-    struct s_bb        *black;
-    struct s_bb        *white;
-    int         col;
-};
 
 /* calcul les deplacements possibles,
  * prend en param :
