@@ -125,7 +125,7 @@ int fill_tab(struct s_echiquier *e, char **mem, int i, struct s_case *cini,
 		    coup[j] = mem[i][j];
 		    j++;
 		}
-	    
+	    printf("%s\n",coup);
 	    j = fill_coup(e, coup, j, cini, cfin, bb_bl, bb_wh);
 	    coup[j] = ' ';
 	    j++;
@@ -221,7 +221,32 @@ void update_b(struct s_bb *bb_bl, struct s_bb *bb_wh, struct s_case *cini,
 
 }
 
-void twoplayers(struct s_echiquier e, SDL_Event event)
+int update(struct s_echiquier *e, struct s_case *cini,struct s_case *cfin,
+	   struct s_bb *bb_bl, struct s_bb *bb_wh, char **mem, t_list *dead,
+	   enum color *joueur, SDL_Surface *marque, int i)
+{
+    int mort = 0;
+    i = fill_tab(e,mem, i, cini, cfin, bb_bl, bb_wh);
+    if (cfin->p)
+	mort = 1;
+    update_b(bb_bl, bb_wh, cini, cfin);
+    *dead= deplacement(e, cini->num, ((int)cini->let)-65,
+		      cfin->num, ((int)cfin->let)-65, *dead);
+    change_postion(e, cini->num, ((int)cini->let)-65);
+    change_postion(e, cfin->num, ((int)cfin->let)-65);
+    if (mort == 1)
+	blit_dead_sdl(*dead ,e);
+    if (*joueur == blanc)
+	*joueur = noir;
+    else
+	*joueur = blanc;
+    decolo_sdl(e);
+    marque_sdl((int)cini->num, ((int)cini->let)-65, e,
+	       marque);
+    return i;
+}
+
+void twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
 {
     int i = 1;
     bitboard        que = WHITE_P2, poss;
@@ -238,9 +263,9 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
     /* sert a savoir si on click ou non */
     int click = 0;
     int continuer = 1;
-    int mort = 0;
 
-    populate (&bb_bl, WHITE);/*init*/
+    
+     populate (&bb_bl, WHITE);/*init*/
     populate (&bb_wh, BLACK)/*je vous emmerde*/;
     marque = init_marque_sdl();
     print_ech(~que);
@@ -248,6 +273,11 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
     print_ech (que);
     poss = dep_pawn(que, bb_bl.pieces[0], bb_wh.pieces[0], WHITE);
     print_ech(poss);
+
+    if (load)
+    i = maj(caml_callback(*caml_named_value("parser"),
+	    caml_copy_string(save)),&e, &bb_bl, &bb_wh, mem, &dead,
+	    &joueur, marque, i);
 
     while(continuer){
     /* attente d un evt */
@@ -346,25 +376,8 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
 			}
 		      else
 			{
-			  printf("Case bleue\n");
-			  i = fill_tab(&e,mem, i, cini, cfin, &bb_bl, &bb_wh);
-			  if (cfin->p)
-			    mort = 1;
-			  update_b(&bb_bl, &bb_wh, cini, cfin);
-			  dead= deplacement(&e, cini->num, ((int)cini->let)-65,
-				      cfin->num, ((int)cfin->let)-65, dead);
-			  change_postion(&e, cini->num, ((int)cini->let)-65);
-			  change_postion(&e, cfin->num, ((int)cfin->let)-65);
-			  if (mort == 1)
-			    blit_dead_sdl(dead ,&e);
-			  mort = 0;
-			  if (joueur == blanc)
-			    joueur = noir;
-			  else
-			    joueur = blanc;
-			  decolo_sdl(&e);
-			  marque_sdl((int)cini->num, ((int)cini->let)-65, &e,
-				     marque);
+			  i = update(&e, cini,cfin, &bb_bl, &bb_wh, mem, 
+				     &dead, &joueur, marque, i);
 			  cini = NULL;
 			}
 		    }
@@ -382,32 +395,9 @@ void twoplayers(struct s_echiquier e, SDL_Event event)
 			    }
 			  else
 			    {
-			      printf("Case bleue\n");
-			      if (!cfin)
-				  printf("lol\n");
-			      i = fill_tab(&e, mem, i, cinipr, cfin,
-					   &bb_bl, &bb_wh);
-			      if (cfin->p)
-				mort = 1;
-			      update_b(&bb_bl, &bb_wh, cinipr, cfin);
-			      dead = deplacement(&e, cinipr->num,
-					  ((int)cinipr->let)-65,
-					cfin->num, ((int)cfin->let)- 65, dead);
-			      change_postion(&e, cinipr->num,
-					     ((int)cinipr->let)- 65);
-			      change_postion(&e, cfin->num,
-					     ((int)cfin->let)-65);
-			      if (mort)
-				blit_dead_sdl(dead ,&e);
-			      mort = 0;
-			      decolo_sdl(&e);
-			      marque_sdl((int)cinipr->num,
-					 ((int)cinipr->let)-65, &e, marque);
-			      cini = NULL;
-			      if (joueur == blanc)
-				joueur = noir;
-			      else
-				joueur = blanc;
+			     i = update(&e, cinipr,cfin, &bb_bl, &bb_wh, mem,
+					&dead, &joueur, marque, i);
+				  cini = NULL;
 			    }
 			}
 		      else
