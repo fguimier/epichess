@@ -83,7 +83,7 @@ int gui()
 	case SDL_MOUSEBUTTONDOWN:
 	  if ((click.button.x >= pnew.x)&&(click.button.x <= pnew.x+LO)&&(click.button.y >= pnew.y)&&(click.button.y <= pnew.y+LA))
 	    {
-	    shellmon(ecran);
+		shellmon(ecran, 0, "partie");
 	    /*ptêt un peu crade...*/
 	    continuer = 0;
 	    refresh = 0;
@@ -91,7 +91,12 @@ int gui()
 	  else if ((click.button.x >= psave.x)&&(click.button.x <= psave.x+LO)&&(click.button.y >= psave.y)&&(click.button.y <= psave.y+LA))
 	    printf("SAVE !\n");
 	  else if ((click.button.x >= pload.x)&&(click.button.x <= pload.x+LO)&&(click.button.y >= pload.y)&&(click.button.y <= pload.y+LA))
-	    printf("LOAD !\n");
+	      {
+		  shellmon(ecran, 1, "partie");
+		  /*ptêt un peu crade...*/
+		  continuer = 0;
+		  refresh = 0;
+	      }
 	  else if ((click.button.x >= peasy.x)&&(click.button.x <= peasy.x+LO)&&(click.button.y >= peasy.y)&&(click.button.y <= peasy.y+LA))
 	    printf("EASY !\n");
 	  else if ((click.button.x >= pmedium.x)&&(click.button.x <= pmedium.x+LO)&&(click.button.y >= pmedium.y)&&(click.button.y <= pmedium.y+LA))

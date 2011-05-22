@@ -1,5 +1,4 @@
 external gui : unit -> int = "gui"
-external maj : string -> unit = "maj"
 
 let parse coord =
   let read_channel = open_in coord in
@@ -8,28 +7,29 @@ let parse coord =
   let com = ref false in
   let instr = ref "" in
   let char = ref 'a' in
-    while not(!read = "\n") do
+  let res = ref [] in
+    while not(!read = "") do
       read := input_line read_channel
     done;
     try
       while true do
 	read := input_line read_channel;
 	len := String.length(!read);
-	for i = 0 to !len do
+	for i = 0 to !len -1 do
 	  char := String.get !read i;
 	  if not !com then
 	    match !char with
 	      |'%'|'{'->com := true
-	      |' '|'\n'-> maj !instr;instr := ""
+	      |' '|'\n'-> if not(!instr = "") then res := !res@[!instr];instr := ""
 	      |c->instr := !instr ^Char.escaped(c)
 	  else
 	    if !char = '}' then
 	      com := false
 	done;
       done;
-!instr
+!res@[!instr]
     with
-	End_of_file ->close_in read_channel;!instr
+	End_of_file ->close_in read_channel;if not(!instr = "") then res :=!res@[!instr]; !res
 
 
       

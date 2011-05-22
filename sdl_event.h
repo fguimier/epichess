@@ -7,6 +7,6 @@
 #include "pgn.h"
 #include "pgn_read.h"
  
-void twoplayers(struct s_echiquier, SDL_Event);
+void twoplayers(struct s_echiquier, SDL_Event, int, char *);
 
 #endif

@@ -209,7 +209,8 @@ void blit_dead_sdl(t_list dead, struct s_echiquier *e)
   SDL_Rect pos;
   t_list copy = dead;
   enum color c = ((struct s_piece*)dead->val)->piece_color;
-  printf("NYAH\n");
+  printf("Blit des morts\n");
+  pos.x = pos.y = 0;
   pos.y -= h;
   while (copy)
     {
@@ -226,6 +227,7 @@ void blit_dead_sdl(t_list dead, struct s_echiquier *e)
       pos.y -= h * 8;
       pos.x += h;
     }
+  printf("%i,%i\n",pos.x,pos.y);
   SDL_BlitSurface(((struct s_piece*)dead->val)->piece_sprite, NULL, e->screen,
 		  &pos);
   SDL_Flip(e->screen);
