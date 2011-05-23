@@ -32,6 +32,6 @@ int shellmon (SDL_Surface *patamon, int load, char *save)
     twoplayers(e, event, load, save);
       
     free_sdl(&e);
-
+    printf("Mmmh\n");
     return 0;
 }

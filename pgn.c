@@ -5,13 +5,46 @@ void pgn_out(char **mem, char *filename)
     int i, j, h, n;
     char *coup = malloc(90);
     FILE *out;
+    time_t timestamp;
+    char *date = calloc (0,30);
+    char * tmp = malloc(5);
+    struct tm * t;
+    int z = 0;
+
+    timestamp = time(NULL);
+    t = localtime(&timestamp);
+    strcat (date, "[Date \"2011.");
+    while(t->tm_mday)
+      {
+	tmp[z] = t->tm_mday % 10 + '0';
+	t->tm_mday /= 10;
+	z++;
+      }
+    tmp[z] = tmp[z-2];
+    tmp[z-2] = tmp[z-1];
+    tmp[z-1] = tmp[z];
+    tmp[z] = 0;
+    z = 0;
+    strcat (date, tmp);
+    strcat (date, ".");
+    while(t->tm_mon)
+      {
+        tmp[z] = t->tm_mon % 10 + '0';
+        t->tm_mon /= 10;
+        z++;
+      }
+    tmp[z] = tmp[z-1]+1;
+    tmp[z-1] = '0';
+    tmp[z+1] = 0;
+    strcat (date, tmp);
+    strcat (date,"\"]\n");
     i = 1;
     j = 0;
     /* en-tête */
     out = fopen (filename,"w+");
     fwrite("[Event \"Soutenance\"]\n",1,21,out);
     fwrite("[Site \"Villejuif\"]\n",1,19,out);
-    fwrite("[Date \"2011.??.??\"]\n",1,20,out);
+    fwrite(date,1,20,out);
     fwrite("[Round \"2\"]\n",1,12,out);
     fwrite("[White \"Joueur, 1\"]\n",1,20,out);
     fwrite("[Event \"Joueur, 2\"]\n",1,20,out);
@@ -60,5 +93,6 @@ void pgn_out(char **mem, char *filename)
 		    h = n;
 		}
 	}
+    fclose(out);
     free(coup);
 }

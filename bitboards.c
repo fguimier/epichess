@@ -134,7 +134,10 @@ void pop_white (struct s_bb *tb)
     tb->pieces[15] = WHITE_Q;
     tb->pieces[16] = WHITE_K;
     for (; i < 17; i++)
+      {
         tb->pieces[0] = tb->pieces[0] | tb->pieces[i];
+	tb->possib[i] = 0x1111111111112121;
+      }
 }
 void pop_black (struct s_bb *tb)
 {
@@ -158,8 +161,10 @@ void pop_black (struct s_bb *tb)
     tb->pieces[15] = BLACK_Q;
     tb->pieces[16] = BLACK_K;
     for (; i < 17; i++)
+      {
         tb->pieces[0] = tb->pieces[0] | tb->pieces[i];
-
+	tb->possib[i] = 0x1111111111112121;
+      }
 }
 void populate (struct s_bb *tb, int col)
 {
