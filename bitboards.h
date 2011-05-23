@@ -2,7 +2,8 @@
 #define BITBOARD_H_
 
 #include <stdint.h>
-
+#include <stdio.h>
+#include <unistd.h>
 typedef uint64_t   bitboard;
 
 struct s_bb {

@@ -158,6 +158,75 @@ t_list search_horse(struct s_echiquier *e, struct s_case *cini,
   return possi;
     
 }
+
+/*t_list search_bishop(struct s_echiquier *e, struct s_case *cini,
+                    struct s_case *cfin, enum color colo,
+                    struct s_bb *bb_bl, struct s_bb *bb_wh)
+{
+  int i = cini->num;
+  int j = cini->let - 65;
+  t_list possi = NULL;
+  bitboard pos_i, pos_f, coup_pos,all,zero,res;
+
+  pos_i = get_case(7-i,j);
+  if (!cfin)
+    printf("lol\n");
+  i = cfin->num;
+  j = cfin->let - 65;
+  pos_f = get_case(7-i, j);
+  zero = 0x0000000000000000;
+  res = zero;
+  printf("pos_i:\n");
+  print_ech(pos_i);
+  all = bb_bl->pieces[0]|bb_wh->pieces[0];
+  **********on renvoie quoi ?***********************
+  if (colo == blanc)
+    {
+      if ((bb_wh->pieces[11]==zero)|(bb_wh->pieces[12] ==zero))
+        return NULL;
+      if (bb_wh->pieces[11]==pos_i)
+        {
+          coup_pos = dep_bishop(bb_wh->pieces[12],bb_bl->pieces[0],all);
+          if ((coup_pos&pos_f)!=zero)
+            res = res | bb_wh->pieces[10];
+        }
+      else
+        {
+          coup_pos = dep_bishop(bb_wh->pieces[11],bb_bl->pieces[0],all);
+          if ((coup_pos&pos_f)!=zero)
+            res = res | bb_wh->pieces[9];
+        }
+    }
+  else
+    {
+      if ((bb_bl->pieces[11]==zero)|(bb_bl->pieces[12] ==zero))
+        return NULL;
+      if (bb_bl->pieces[11]==pos_i)
+        {
+          coup_pos = dep_bishop(bb_bl->pieces[12],bb_wh->pieces[0],all);
+          if ((coup_pos&pos_f)!=zero)
+            res = res | bb_bl->pieces[12];
+        }
+      else
+        {
+          coup_pos = dep_bishop(bb_bl->pieces[11],bb_wh->pieces[0],all);
+          if ((coup_pos&pos_f)!=zero)
+            res = res | bb_bl->pieces[11];
+        }
+    }
+  print_ech(res);
+  possi = b2c(e, res);
+  return possi;
+}
+*/
+
+
+
+
+
+
+
+
 void updates_b(struct s_bb *bb_bl, struct s_bb *bb_wh, struct s_case *cini,
 	       struct s_case *cfin)
 {
@@ -196,6 +265,8 @@ void updates_b(struct s_bb *bb_bl, struct s_bb *bb_wh, struct s_case *cini,
 	}
       bb_bl->pieces[i] = fin;
     }
+  calc_all_dep(bb_bl, bb_wh);
+  calc_all_dep(bb_wh, bb_bl);
 }
 
 void updates_e(struct s_echiquier *e, struct s_case *cini,struct s_case *cfin,
@@ -242,6 +313,7 @@ void *search_cini(struct s_echiquier *e,char *coup, int j,
       bb = bb_bl;
       bb_e = bb_wh;
     }
+  printf("coup[j] : %c\n",coup[j]);
   if (coup[j]=='x')
     j--;
   if (coup[j] >'0' && coup[j]<'9')
@@ -267,8 +339,7 @@ void *search_cini(struct s_echiquier *e,char *coup, int j,
       break;
     case 'B':
       if ((bb->pieces[12] != zero) &&
-	  (((given == zero && bfin & dep_bishop(bb->pieces[12],
-						bb_e->pieces[0],all)) != zero)||
+	  ((given == zero && (bfin & bb->possib[12]) != zero)||
 	   (given !=zero && ((bb->pieces[12] | given) == given))))
 	res = b2c(e, bb->pieces[12]);
       else
@@ -278,21 +349,23 @@ void *search_cini(struct s_echiquier *e,char *coup, int j,
       printf("Tour\n");
       print_ech(bb_e->pieces[0]);
       print_ech(all);
-      print_ech(dep_rook(bb->pieces[9], bb_e->pieces[0],all));
-      print_ech(dep_rook(bb->pieces[10], bb_e->pieces[0],all));
+      print_ech(bfin);
+      print_ech(bb->pieces[9]);
+      print_ech(bb->possib[9]);
+      print_ech(bb->possib[10]);
       print_ech(given);
-      if ((bb->pieces[9] != zero) &&
-	  (((given == zero && bfin & dep_rook(bb->pieces[9],
-					      bb_e->pieces[0],all)) != zero)||
-	   (given !=zero && ((bb->pieces[9] | given) == given))))
-	res = b2c(e, bb->pieces[9]);
+      if (bb->pieces[9] != zero)
+	{
+	  if ((given == zero && ((bfin & bb->possib[9]) != zero))||
+	      (given !=zero && ((bb->pieces[9] | given) == given)))
+	    res = b2c(e, bb->pieces[9]);
+	}
       else
 	res = b2c(e, bb->pieces[10]);
       break;
     case 'N':
       if ((bb->pieces[13] != zero) &&
-	  (((given == zero && bfin & dep_knight(bb->pieces[13],
-						bb_e->pieces[0])) != zero)||
+	  (((given == zero && bfin & bb->possib[13]) != zero)||
 	   (given !=zero && ((bb->pieces[13] | given) == given))))
 	res = b2c(e, bb->pieces[13]);
       else
@@ -303,12 +376,10 @@ void *search_cini(struct s_echiquier *e,char *coup, int j,
 	  printf("Pion\n");
 	  print_ech(bb_e->pieces[0]);
 	  print_ech(all);
-	  print_ech(dep_pawn(bb->pieces[i], bb_e->pieces[0],all,
-			     *joueur != blanc));
+	  print_ech(bb->possib[i]);
 	  print_ech(given);
-	  if(bb->pieces[i] != zero && 
-	     ((bfin & dep_pawn(bb->pieces[i], bb_e->pieces[0],all, 
-			       *joueur != blanc))!=zero))
+	  if(bb->pieces[i] != zero &&
+	     ((bfin & bb->possib[i]) !=zero))
 	    if ((given == zero)||
 		(((given != zero) && ((bb->pieces[i] | given) == given))))
 	      {
@@ -364,7 +435,7 @@ int updates(char * coup, struct s_echiquier *e,struct s_bb *bb_bl,
       printf("cfin : %i,%i\n",coup[h-2]-'a',coup[h-1]-'1');
       bfin = get_case(7-cfin->num,cfin->let-'A');
       print_ech(bfin);
-      cini = (struct s_case *)search_cini(e, coup, j, joueur, bb_wh, bb_bl, bfin);
+      cini = (struct s_case *)search_cini(e, coup, h, joueur, bb_wh, bb_bl, bfin);
       i++;
     }
   updates_b(bb_bl, bb_wh, cini, cfin);

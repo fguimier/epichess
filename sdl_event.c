@@ -217,7 +217,7 @@ void update_b(struct s_bb *bb_bl, struct s_bb *bb_wh, struct s_case *cini,
 	}
       bb_bl->pieces[i] = fin;
     }
-
+  calc_all_dep(bb_bl, bb_wh);
 }
 
 int update(struct s_echiquier *e, struct s_case *cini,struct s_case *cfin,
@@ -248,7 +248,6 @@ int update(struct s_echiquier *e, struct s_case *cini,struct s_case *cfin,
 void twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
 {
   int i = 1;
-  bitboard        que = WHITE_P2, poss;
   struct s_bb     bb_bl, bb_wh;/*0:pop;1-8:pions;9:tourgauch,10:cavgauch...
 				 roiblan=reinenoi*/
   struct s_case *cini = NULL;
@@ -262,17 +261,22 @@ void twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
   /* sert a savoir si on click ou non */
   int click = 0;
   int continuer = 1;
-
-    
-  populate (&bb_bl, WHITE);/*init*/
-  populate (&bb_wh, BLACK)/*je vous emmerde*/;
+  
+  populate (&bb_bl, WHITE);
+  populate (&bb_wh, BLACK);
   marque = init_marque_sdl();
-  print_ech(~que);
-  poss = dep_queen(que, 0x00,0x00);
-  print_ech (que);
-  poss = dep_pawn(que, bb_bl.pieces[0], bb_wh.pieces[0], WHITE);
-  print_ech(poss);
-
+  /*bb_wh.pieces[1]=0x00;
+  bb_wh.pieces[9]=bb_wh.pieces[9]<<32;
+  bb_wh.pieces[9]=bb_wh.pieces[9]<<8;
+  print_ech(bb_wh.pieces[9]);
+  bb_wh.pieces[0]&= ~WHITE_P1;
+  bb_wh.pieces[0]&= ~WHITE_T1;
+  bb_wh.pieces[0]|=bb_wh.pieces[9];
+  calc_all_dep (&bb_wh, &bb_bl);
+  print_ech(bb_wh.possib[0]);
+  print_ech(bb_bl.possib[0]);
+  */
+  calc_all_dep(&bb_bl, &bb_wh);
   if (load)
     i = maj(caml_callback(*caml_named_value("parser"),
 			  caml_copy_string(save)),&e, &bb_bl, &bb_wh, mem, &dead,
@@ -411,6 +415,7 @@ void twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
   pgn_out(mem, "partie");
   for (; i >= 0;i--)
     {
+      printf("lol\n");
       if (mem[i])
 	free(mem[i]);
     }

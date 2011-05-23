@@ -111,32 +111,54 @@ bitboard deplace_poss (bitboard init, bitboard (*fct)(bitboard), bitboard l, bit
 void calc_dep (struct s_bb *tab, bitboard e)
 {
     int         i = 1;
+    bitboard all;
+    bitboard zero = 0x0000000000000000;
     tab->possib[0] = 0x00;
+    all = tab->pieces[0]|e;
     for (; i < 9; i++) /* peons */
     {
-        tab->possib[i] = dep_pawn(tab->pieces[i], e, tab->pieces[0], tab->color);
-        tab->possib[0] |= tab->possib[i];
+      if(tab->pieces[i] != zero)
+	{
+	  tab->possib[i] = dep_pawn(tab->pieces[i], e, tab->pieces[0], tab->color);
+	  tab->possib[0] |= tab->possib[i];
+	}
     }
     for (; i < 11; i++) /* tours */
     {
-        tab->possib[i] = dep_rook(tab->pieces[i], e, tab->pieces[0]);
-        tab->possib[0] |= tab->possib[i];
+      if(tab->pieces[i] != zero)
+        {
+	  printf("MAJ\n");
+	  tab->possib[i] = dep_rook(tab->pieces[i], e, tab->pieces[0]);
+	  tab->possib[0] |= tab->possib[i];
+	}
     }
     for (; i < 13; i++) /* fous */
     {
-        tab->possib[i] = dep_bishop(tab->pieces[i], e, tab->pieces[0]);
-        tab->possib[0] |= tab->possib[i];
+      if(tab->pieces[i] != zero)
+        {
+	  tab->possib[i] = dep_bishop(tab->pieces[i], e, tab->pieces[0]);
+	  tab->possib[0] |= tab->possib[i];
+	}
     }
     for (; i < 15; i++) /* chevals */
     {
-        tab->possib[i] = dep_knight(tab->pieces[i], tab->pieces[0]);
-        tab->possib[0] |= tab->possib[i];
+      if(tab->pieces[i] != zero)
+        {
+	  tab->possib[i] = dep_knight(tab->pieces[i], tab->pieces[0]);
+	  tab->possib[0] |= tab->possib[i];
+	}
     }
-    tab->possib[i] = dep_queen(tab->pieces[i], e, tab->pieces[0]);
-    tab->possib[0] |= tab->possib[i];
+    if(tab->pieces[i] != zero)
+      {
+	tab->possib[i] = dep_queen(tab->pieces[i], e, tab->pieces[0]);
+	tab->possib[0] |= tab->possib[i];
+      }
     i++;
-    tab->possib[i] = dep_king(tab->pieces[i], tab->pieces[0]);
-    tab->possib[0] |= tab->possib[i];
+    if(tab->pieces[i] != zero)
+      {
+	tab->possib[i] = dep_king(tab->pieces[i], tab->pieces[0]);
+	tab->possib[0] |= tab->possib[i];
+      }
 }
 
 
