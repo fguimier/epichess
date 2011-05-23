@@ -99,6 +99,7 @@ void print_ech (bitboard b)
     }
     printf ("\n");
 }
+
 bitboard get_case (int c, int l)
 {
     bitboard b = 0x00;
