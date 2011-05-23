@@ -12,7 +12,7 @@
 t_list search_tower(struct s_echiquier *e, struct s_case *cini,
 		    struct s_case *cfin, enum color colo,
 		    struct s_bb *bb_bl, struct s_bb *);
-int maj(value s,struct s_echiquier *e, struct s_bb *bb_bl, struct s_bb *bb_wh,
+int maj(value v,struct s_echiquier *e, struct s_bb *bb_bl, struct s_bb *bb_wh,
 	 char **mem, t_list *dead, enum color *joueur,
 	 SDL_Surface *marque, int i);
 #endif
