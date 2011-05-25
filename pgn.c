@@ -4,7 +4,7 @@
 #include <dirent.h>
 
 
-void pgn_out(char **mem, char *filename)
+void pgn_out(char **mem, char *filename, int ia)
 {
     int i, j, h, n;
     char *coup = malloc(90);
@@ -62,7 +62,10 @@ void pgn_out(char **mem, char *filename)
 printf("%s\n",mmh);
     fwrite("[Round \"2\"]\n",1,12,out);
     fwrite("[White \"Joueur, 1\"]\n",1,20,out);
-    fwrite("[Event \"Joueur, 2\"]\n",1,20,out);
+      if(!ia)
+            fwrite("[Event \"Joueur, 2\"]\n",1,20,out);
+      else
+            fwrite("[Event \"IA\"]\n",1,13,out);
     fwrite("[Result \"*\"]\n",1,13,out);
     fwrite("\n",1,1,out);
 printf("%s\n",mmh);
