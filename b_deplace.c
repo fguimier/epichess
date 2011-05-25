@@ -14,22 +14,23 @@ bitboard dep_knight (bitboard init, bitboard a)
     {
         poss |= deplace_knight_lf(init);
         poss |= deplace_knight_lb(init);
-        if (!(init & LEFT_B))
-        {
-            poss |= deplace_knight_bl(init);
-            poss |= deplace_knight_fl(init);
-        }
+    }
+    if (!(init & LEFT_B))
+    {
+        poss |= deplace_knight_bl(init);
+        poss |= deplace_knight_fl(init);
     }
     if (!(init & deplace_l(RIGHT_B)))
     {
         poss |= deplace_knight_rb(init);
         poss |= deplace_knight_rf(init);
-        if (!(init & RIGHT_B))
-        {
-            poss |= deplace_knight_br(init);
-            poss |= deplace_knight_fr(init);
-        }
     }
+    if (!(init & RIGHT_B))
+    {
+        poss |= deplace_knight_br(init);
+        poss |= deplace_knight_fr(init);
+    }
+
     return poss & ~a;
 }
 bitboard dep_queen (bitboard init,  bitboard e, bitboard a)
@@ -183,9 +184,15 @@ inline int check(struct s_bb *tocheck, struct s_bb *ennemy)
 {
     return tocheck->pieces[16] & ennemy->possib[0];
 }
-inline int checkmate_base (struct s_bb *tocheck, struct s_bb *ennemy)
-{
-    return !(tocheck->possib[16] & ~ennemy->possib[0]);
+int checkmate_base (struct s_bb tocheck, struct s_bb ennemy)
+{   
+    bitboard king = tocheck.pieces[16];
+    tocheck.pieces[16] = 0;
+    update_piece(&tocheck);
+    print_ech(tocheck.pieces[0]);
+    calc_all_dep(&tocheck, &ennemy);
+    print_ech(ennemy.possib[0]);
+    return (ennemy.possib[0] & dep_king(king, ennemy.pieces[0]));
 } 
 int checkmate (struct s_bb tocheck, struct s_bb ennemy)
 {
@@ -193,7 +200,7 @@ int checkmate (struct s_bb tocheck, struct s_bb ennemy)
     struct s_bb ttocheck, tennemy;
     ttocheck = tocheck;
     tennemy = ennemy;
-    if (!checkmate_base(&tocheck, &ennemy))
+    if (!checkmate_base(tocheck, ennemy))
         return 0;
     for (; i < 17; i++)
     {

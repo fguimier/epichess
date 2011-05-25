@@ -24,7 +24,7 @@ bitboard dep_king (bitboard, bitboard);
 
 void calc_all_dep (struct s_bb *, struct s_bb *);
 int check(struct s_bb *, struct s_bb *);
-int checkmate_base (struct s_bb *, struct s_bb *);
+int checkmate_base (struct s_bb, struct s_bb);
 void update_piece (struct s_bb *);
 int checkmate (struct s_bb, struct s_bb);
 
