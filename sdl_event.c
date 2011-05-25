@@ -271,7 +271,7 @@ int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
   print_ech(bb_wh.pieces[9]);
   bb_wh.pieces[0]&= ~WHITE_P1;
   bb_wh.pieces[0]&= ~WHITE_T1;
-  bb_wh.pieces[0]|=bb_wh.pieces[9];
+  bb_wh.pieces[0]|=bb_wh.pieces[9]; 
   calc_all_dep (&bb_wh, &bb_bl);
   print_ech(bb_wh.possib[0]);
   print_ech(bb_bl.possib[0]);
