@@ -1,5 +1,9 @@
 #include "sdl_event.h"
 #include "b_deplace.h"
+
+#define LO 85
+#define LA 28
+
 int fill_depl(char *coup, int i, struct s_case *init, struct s_case *cfin,
               t_list pos)
 {
@@ -245,7 +249,7 @@ int update(struct s_echiquier *e, struct s_case *cini,struct s_case *cfin,
   return i;
 }
 
-int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
+int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save, SOCKET soc, int client)
 {
   int i = 1;
   struct s_bb     bb_bl, bb_wh;/*0:pop;1-8:pions;9:tourgauch,10:cavgauch...
@@ -255,38 +259,58 @@ int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
   struct s_case *cinipr = NULL; /*case initiale precedente*/
   struct s_deplace coup_pos[60];
   t_list dead = NULL;
+  rez rezo = malloc(sizeof(struct res));
   char **mem = calloc(500,sizeof(char *));
   enum color joueur = noir;
   SDL_Surface *marque;
   /* sert a savoir si on click ou non */
   int click = 0;
   int continuer = 1;
+  SDL_Surface *save1 = NULL, *retour = NULL;
+  SDL_Rect psave1, pretour;
+
+  printf("Pre-inite OK\n");
+      
+  psave1.x = 500;
+  psave1.y = 500;
+
+  pretour.x = 410;
+  pretour.y = 500;
+
+  save1 = SDL_LoadBMP("sprites/1.bmp");
+  retour = SDL_LoadBMP("sprites/retour.bmp");
+
+  SDL_BlitSurface(retour, NULL, e.screen, &pretour);
+  SDL_BlitSurface(save1, NULL, e.screen, &psave1);
   
-  populate (&bb_bl, BLACK);
-  populate (&bb_wh, WHITE);
-    for (; i < 15; i++)
-    {
-        bb_bl.pieces[i] = 0;
-        bb_wh.pieces[i] = 0;
-    }
-    bb_wh.pieces[15] = 0;
-    bb_bl.pieces[15] = 1;
-    bb_bl.pieces[9] = 0x100;
-    update_piece(&bb_wh);
-    update_piece(&bb_bl);
-    print_ech(bb_bl.pieces[0]);
-    
-    calc_all_dep(&bb_wh, &bb_bl);
+  populate (&bb_bl, WHITE);
+  populate (&bb_wh, BLACK);
+  marque = init_marque_sdl();
+  /*bb_wh.pieces[1]=0x00;
+  bb_wh.pieces[9]=bb_wh.pieces[9]<<32;
+  bb_wh.pieces[9]=bb_wh.pieces[9]<<8;
+  print_ech(bb_wh.pieces[9]);
+  bb_wh.pieces[0]&= ~WHITE_P1;
+  bb_wh.pieces[0]&= ~WHITE_T1;
+  bb_wh.pieces[0]|=bb_wh.pieces[9];
+  calc_all_dep (&bb_wh, &bb_bl);
+  print_ech(bb_wh.possib[0]);
+  print_ech(bb_bl.possib[0]);
+  */
+  calc_all_dep(&bb_bl, &bb_wh);
+      printf("Pre-inite OK\n");
+  if(client)
+      {
+            recv(soc, rezo, sizeof(struct res),0);
+            cinipr = &(e.mat[rezo->di][rezo->dj]);
+            cfin = &(e.mat[rezo->ai][rezo->aj]);
+            printf("%i%c\n",cfin->num,cfin->let);
+            i = update(&e, cinipr,cfin, &bb_bl, &bb_wh, mem,
+			     &dead, &joueur, marque, i);
+      cini =NULL;
+      }
 
-    print_ech(bb_wh.possib[0] | bb_bl.possib[0]);
-    if (checkmate_base(bb_wh, bb_bl))
-        printf("checkmate\n");
-    else
-        printf("pas checkmate\n");
-
-    i = 1;
-    marque = init_marque_sdl();
-   if (load)
+  if (load)
     i = maj(caml_callback(*caml_named_value("parser"),
 			  caml_copy_string(save)),&e, &bb_bl, &bb_wh, mem, &dead,
             &joueur, marque, i);
@@ -313,7 +337,17 @@ int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
 		decolo_sdl(&e);
 		cini = NULL;
 		click = 0;
-	/*ici on verifie que l'on a pas cliqu'e sur retour ou sauvegarder*/
+		if ((event.button.x >= psave1.x)&&(event.button.x <= psave1.x+LO)&&(event.button.y >= psave1.y)&&(event.button.y <= psave1.y+LA))
+		  {
+		  /**************************/
+		    /* Twilight Sparkle */
+		 /**************************/
+		      pgn_out(mem, "partie");
+		  }
+		if ((event.button.x >= pretour.x)&&(event.button.x <= pretour.x+LO)&&(event.button.y >= pretour.y)&&(event.button.y <= pretour.y+LA))
+		  {
+		    return 1;
+		  }
 	      }
 	    else
 	      {
@@ -391,6 +425,19 @@ int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
                         {
                           i = update(&e, cini,cfin, &bb_bl, &bb_wh, mem, 
                                      &dead, &joueur, marque, i);
+                          if(soc)
+                        {
+                              rezo->di = cini->num;
+                              rezo->dj =((int)cini->let)-65;
+                              rezo->ai =cfin->num;
+                              rezo->aj =((int)cfin->let)-65;
+                              send(soc, rezo, sizeof(struct res),0);
+                              recv(soc, rezo, sizeof(struct res),0);
+                              cini = &(e.mat[rezo->di][rezo->dj]);
+                              cfin = &(e.mat[rezo->ai][rezo->aj]);
+                              i = update(&e, cini,cfin, &bb_bl, &bb_wh, mem,
+				     &dead, &joueur, marque, i);
+                        }
                           cini = NULL;
                         }
                     }
@@ -410,6 +457,23 @@ int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
 			{
 			  i = update(&e, cinipr,cfin, &bb_bl, &bb_wh, mem,
 				     &dead, &joueur, marque, i);
+                  if(soc)
+                        {
+                              rezo->di = cinipr->num;
+                              rezo->dj =((int)cinipr->let)-65;
+                              rezo->ai =cfin->num;
+                              rezo->aj =((int)cfin->let)-65;
+                              printf("Envoi\n");
+                              send(soc, rezo, sizeof(struct res),0);
+                              printf("Recoit\n");
+                              recv(soc, rezo, sizeof(struct res),0);
+                              cinipr = &(e.mat[rezo->di][rezo->dj]);
+                              cfin = &(e.mat[rezo->ai][rezo->aj]);
+                               printf("%i%c\n",cfin->num,cfin->let);
+                              i = update(&e, cinipr,cfin, &bb_bl, &bb_wh, mem,
+				     &dead, &joueur, marque, i);
+                               
+                        }
 			  cini = NULL;
 			}
 		    }
@@ -422,7 +486,7 @@ int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
       }
   }
   SDL_FreeSurface(marque);
-  pgn_out(mem, "partie");
+
   for (; i >= 0;i--)
     {
       printf("lol\n");

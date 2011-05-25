@@ -1,0 +1,5 @@
+Manuel d'installation :
+$make
+Manuel de desinstallation
+$make clean
+$rm -r ../epichess
