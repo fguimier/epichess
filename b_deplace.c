@@ -9,21 +9,27 @@
 
 bitboard dep_knight (bitboard init, bitboard a)
 {
-    bitboard poss;
-    if(init & (RIGHT_B | LEFT_B))
-      {
-	poss = deplace_knight_br(init);
-	poss |= deplace_knight_bl(init);
-	poss |= deplace_knight_fr(init);
-	poss |= deplace_knight_fl(init);
-	if(init & ((deplace_l(RIGHT_B)) | (deplace_r(LEFT_B))))
-	  {
-	    poss |= deplace_knight_rb(init);
-	    poss |= deplace_knight_lb(init);
-	    poss |= deplace_knight_rf(init);
-	    poss |= deplace_knight_lf(init);
-	  }
-      }
+    bitboard poss = 0;
+    if (!(init & deplace_r(LEFT_B)))
+    {
+        poss |= deplace_knight_lf(init);
+        poss |= deplace_knight_lb(init);
+        if (!(init & LEFT_B))
+        {
+            poss |= deplace_knight_bl(init);
+            poss |= deplace_knight_fl(init);
+        }
+    }
+    if (!(init & deplace_l(RIGHT_B)))
+    {
+        poss |= deplace_knight_rb(init);
+        poss |= deplace_knight_rf(init);
+        if (!(init & RIGHT_B))
+        {
+            poss |= deplace_knight_br(init);
+            poss |= deplace_knight_fr(init);
+        }
+    }
     return poss & ~a;
 }
 bitboard dep_queen (bitboard init,  bitboard e, bitboard a)
@@ -113,57 +119,57 @@ bitboard deplace_poss (bitboard init, bitboard (*fct)(bitboard), bitboard l, bit
 	init = fct(init);
 	return init | deplace_poss(init, fct, l, a);
 }
+void update_piece (struct s_bb *tb)
+{
+    int i = 1;
+    tb->pieces[0] = 0;
+    for (; i < 17; i++)
+        tb->pieces[0] = tb->pieces[0] | tb->pieces[i];
+}
 void calc_dep (struct s_bb *tab, bitboard e)
 {
     int         i = 1;
-    bitboard all;
-    bitboard zero = 0x0000000000000000;
     tab->possib[0] = 0x00;
-    all = tab->pieces[0]|e;
     for (; i < 9; i++) /* peons */
     {
-      if(tab->pieces[i] != zero)
-	{
-	  tab->possib[i] = dep_pawn(tab->pieces[i], e, tab->pieces[0], tab->color);
-	  tab->possib[0] |= tab->possib[i];
-	}
+        if (tab->pieces[i])
+        {
+            tab->possib[i] = dep_pawn(tab->pieces[i], e, tab->pieces[0], tab->color);
+            tab->possib[0] |= tab->possib[i];
+        }
     }
     for (; i < 11; i++) /* tours */
     {
-      if(tab->pieces[i] != zero)
+        if (tab->pieces[i])
         {
-	  printf("MAJ\n");
-	  tab->possib[i] = dep_rook(tab->pieces[i], e, tab->pieces[0]);
-	  tab->possib[0] |= tab->possib[i];
-	}
+            tab->possib[i] = dep_rook(tab->pieces[i], e, tab->pieces[0]);
+            tab->possib[0] |= tab->possib[i];
+        }
     }
     for (; i < 13; i++) /* fous */
     {
-      if(tab->pieces[i] != zero)
+        if (tab->pieces[i])
         {
-	  tab->possib[i] = dep_bishop(tab->pieces[i], e, tab->pieces[0]);
-	  tab->possib[0] |= tab->possib[i];
-	}
+            tab->possib[i] = dep_bishop(tab->pieces[i], e, tab->pieces[0]);
+            tab->possib[0] |= tab->possib[i];
+        }
     }
     for (; i < 15; i++) /* chevals */
     {
-      if(tab->pieces[i] != zero)
+        if (tab->pieces[i])
         {
-	  tab->possib[i] = dep_knight(tab->pieces[i], tab->pieces[0]);
-	  tab->possib[0] |= tab->possib[i];
-	}
+            tab->possib[i] = dep_knight(tab->pieces[i], tab->pieces[0]);
+            tab->possib[0] |= tab->possib[i];
+        }
     }
-    if(tab->pieces[i] != zero)
-      {
-	tab->possib[i] = dep_queen(tab->pieces[i], e, tab->pieces[0]);
-	tab->possib[0] |= tab->possib[i];
-      }
+    if (tab->pieces[i])
+    {
+        tab->possib[i] = dep_queen(tab->pieces[i], e, tab->pieces[0]);
+        tab->possib[0] |= tab->possib[i];
+    }
     i++;
-    if(tab->pieces[i] != zero)
-      {
-	tab->possib[i] = dep_king(tab->pieces[i], tab->pieces[0]);
-	tab->possib[0] |= tab->possib[i];
-      }
+    tab->possib[i] = dep_king(tab->pieces[i], tab->pieces[0]);
+    tab->possib[0] |= tab->possib[i];
 }
 
 
@@ -173,14 +179,37 @@ void calc_all_dep (struct s_bb *white, struct s_bb *black)
     calc_dep (black,white->pieces[0]);
 }
 
-int check(struct s_bb *tocheck, struct s_bb *ennemy)
+inline int check(struct s_bb *tocheck, struct s_bb *ennemy)
 {
     return tocheck->pieces[16] & ennemy->possib[0];
 }
-
-int checkmate (struct s_bb *tocheck, struct s_bb *ennemy)
+inline int checkmate_base (struct s_bb *tocheck, struct s_bb *ennemy)
 {
-    if (!(tocheck->possib[16] & ~ennemy->possib[0]))
+    return !(tocheck->possib[16] & ~ennemy->possib[0]);
+} 
+int checkmate (struct s_bb tocheck, struct s_bb ennemy)
+{
+    int         i = 1, j = 1;
+    struct s_bb ttocheck, tennemy;
+    ttocheck = tocheck;
+    tennemy = ennemy;
+    if (!checkmate_base(&tocheck, &ennemy))
         return 0;
+    for (; i < 17; i++)
+    {
+        for (; j < 17; j++){
+            ttocheck = tocheck;
+            tennemy = ennemy;
+            if (tocheck.possib[i] & ennemy.pieces[j])
+            {
+                tocheck.possib[i] = ennemy.pieces[j];
+                ennemy.pieces[j] = 0;
+                calc_all_dep(&tocheck, &ennemy);
+                if (!check(&tocheck, &ennemy))
+                    return 0;
+            }
+        }
+    }
+
     return 1;
 }
