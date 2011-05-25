@@ -41,6 +41,8 @@ void pgn_out(char **mem, char *filename)
     i = 1;
     j = 0;
     /* en-tête */
+    
+    strcat(filename); 
     out = fopen (filename,"w+");
     fwrite("[Event \"Soutenance\"]\n",1,21,out);
     fwrite("[Site \"Villejuif\"]\n",1,19,out);

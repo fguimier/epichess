@@ -295,12 +295,13 @@ void *search_cini(struct s_echiquier *e,char *coup, int j,
 		  enum color *joueur, struct s_bb *bb_wh,
 		  struct s_bb *bb_bl, bitboard bfin)
 {
-  bitboard given, zero, all;
+  bitboard given, zero, all, giv;
   struct s_bb *bb, *bb_e;
   int i = 0;
   t_list res = NULL;
   zero = 0x0000000000000000;
   given = zero;
+  giv = zero;
   all = bb_bl->pieces[0] | bb_wh->pieces[0];
   j-=3;
   if (*joueur == blanc)
@@ -325,9 +326,13 @@ void *search_cini(struct s_echiquier *e,char *coup, int j,
   if (coup[j] >='a' && coup[j]<'i')
     {
       for(;i < 9;i++)
-	given |= get_case(i,coup[j]-'a');
+	giv |= get_case(i,coup[j]-'a');
       j--;
     }
+  if(giv != zero && given != zero)
+    given &= giv;
+  else
+    given |= giv;
   printf("tertio : %c\n", coup[j]);
   switch(coup[j])
     {
@@ -339,7 +344,7 @@ void *search_cini(struct s_echiquier *e,char *coup, int j,
       break;
     case 'B':
       if ((bb->pieces[12] != zero) &&
-	  ((given == zero && (bfin & bb->possib[12]) != zero)||
+	  ((given == zero && ((bfin & bb->possib[12]) != zero))||
 	   (given !=zero && ((bb->pieces[12] | given) == given))))
 	res = b2c(e, bb->pieces[12]);
       else
@@ -368,6 +373,10 @@ void *search_cini(struct s_echiquier *e,char *coup, int j,
 	}
 	  break;
     case 'N':
+      print_ech(bb->pieces[13]);
+      print_ech(bb->pieces[14]);
+      print_ech(bb->possib[13]);
+      print_ech(bb->possib[14]);
       if ((bb->pieces[13] != zero) &&
 	  (((given == zero) && ((bfin & bb->possib[13]) != zero))||
 	   (given !=zero && ((bb->pieces[13] | given) == given))))
