@@ -16,6 +16,6 @@ struct res
       int aj;
 };
 
-int twoplayers(struct s_echiquier, SDL_Event, int, char *, SOCKET, int);
+int twoplayers(struct s_echiquier, SDL_Event, int, char *, SOCKET, int, int);
 
 #endif

@@ -8,7 +8,7 @@
 #include "sdl.h"
 #include "sdl_event.h"
 
-int shellmon (SDL_Surface *patamon, int load, char *save, SOCKET soc, int client)
+int shellmon (SDL_Surface *patamon, int load, char *save, SOCKET soc, int client, int ia)
 {
     struct s_echiquier            e;
     size_t i,j;
@@ -31,7 +31,7 @@ int shellmon (SDL_Surface *patamon, int load, char *save, SOCKET soc, int client
       printf("Pre-inite OK\n");
     ech_print( &e );
 
-    i = twoplayers(e, event, load, save, soc, client);
+    i = twoplayers(e, event, load, save, soc, client, ia);
     printf("Donc\n");
     free_sdl(&e);
     printf("Mmmh\n");

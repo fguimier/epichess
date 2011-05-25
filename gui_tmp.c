@@ -134,7 +134,7 @@ int gui()
 	case SDL_MOUSEBUTTONDOWN:
 	  if ((click.button.x >= pnew.x)&&(click.button.x <= pnew.x+LO)&&(click.button.y >= pnew.y)&&(click.button.y <= pnew.y+LA))
 	    {
-		if(!shellmon(ecran, 0, "partie",csock,0))
+		if(!shellmon(ecran, 0, "partie",csock,0,0))
 		  {
 		    /*ptêt un peu crade...*/
 		    continuer = 0;
@@ -196,7 +196,7 @@ int gui()
 		  i++;
 		}
 	      printf("le texte taper est : %s \n", loadtext);
-	      if(!shellmon(ecran,1,loadtext, csock, 0))
+	      if(!shellmon(ecran,1,loadtext, csock, 0,0))
 	       {
 	         continuer = 0;
 	         refresh = 0;
@@ -210,12 +210,23 @@ int gui()
 
 	    }
 	  else if ((click.button.x >= peasy.x)&&(click.button.x <= peasy.x+LO)&&(click.button.y >= peasy.y)&&(click.button.y <= peasy.y+LA))
-	    printf("EASY !\n");
+	    {
+            if(!shellmon(ecran,1, "mon", csock, 0,1))
+	       {
+	         continuer = 0;
+	         refresh = 0;
+		 qqchose = 0;
+	       }
+	      else
+		{
+		  continuer = 0;
+		}
+            }
 	  else if ((click.button.x >= pmedium.x)&&(click.button.x <= pmedium.x+LO)&&(click.button.y >= pmedium.y)&&(click.button.y <= pmedium.y+LA))
 	    {
 	      csock = init_client();
             printf("Pre-inite du client OK\n");
-	      if(!shellmon(ecran,0,"petit",csock, 1))
+	      if(!shellmon(ecran,0,"petit",csock, 1,0))
 	       {
 	         continuer = 0;
 	         refresh = 0;
@@ -232,7 +243,7 @@ int gui()
 	    {
 	      csock = init_server();
             printf("Pre-inite du serveur OK\n");
-	      if(!shellmon(ecran,0,"partie",csock,0))
+	      if(!shellmon(ecran,0,"partie",csock,0,0))
 	       {
 	         continuer = 0;
 	         refresh = 0;

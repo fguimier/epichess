@@ -249,7 +249,7 @@ int update(struct s_echiquier *e, struct s_case *cini,struct s_case *cfin,
   return i;
 }
 
-int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save, SOCKET soc, int client)
+int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save, SOCKET soc, int client, int ia)
 {
   int i = 1;
   struct s_bb     bb_bl, bb_wh;/*0:pop;1-8:pions;9:tourgauch,10:cavgauch...
@@ -342,7 +342,7 @@ int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save, SOCK
 		  /**************************/
 		    /* Twilight Sparkle */
 		 /**************************/
-		      pgn_out(mem, "partie");
+		      pgn_out(mem, "partie", ia);
 		  }
 		if ((event.button.x >= pretour.x)&&(event.button.x <= pretour.x+LO)&&(event.button.y >= pretour.y)&&(event.button.y <= pretour.y+LA))
 		  {
@@ -425,6 +425,25 @@ int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save, SOCK
                         {
                           i = update(&e, cini,cfin, &bb_bl, &bb_wh, mem, 
                                      &dead, &joueur, marque, i);
+                          if(ia)
+                        {
+                              /*la fction retourn 2 bb(A DECLARER) (un des 2 est un nb)*/
+                              /*
+                                bb = fct(bb_wh, bb_bl); ou ptet que c l'inverse
+                                for (xsx=0;xsx < 8;xsx++)
+    for(dcd=0;dcd < 8;dcd++)
+      {
+	b_tmp = get_case(xsx, dcd);
+	if ((b_tmp & bb[1])!= 0)
+            {xsx_a = xsx; dcd_a = dcd}
+      if ((b_tmp & bb_bl[bb[0]])!= 0)
+            {xsx_d = xsx; dcd_d = dcd}
+      }
+	  update(&e,&(e->mat[7-xsx_d][dcd_d]),&(e->mat[7-xsx_a][dcd_a]),mem,&dead,&joueur,marque,i);
+      
+                              */
+                              printf("ia\n");
+                        }
                           if(soc)
                         {
                               rezo->di = cini->num;
