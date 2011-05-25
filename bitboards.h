@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "socketclient.h"
 typedef uint64_t   bitboard;
 
 struct s_bb {

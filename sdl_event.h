@@ -6,7 +6,16 @@
 #include "list.h"
 #include "pgn.h"
 #include "pgn_read.h"
- 
-int twoplayers(struct s_echiquier, SDL_Event, int, char *);
+
+typedef struct res* rez;
+struct res
+{
+      int di;
+      int dj;
+      int ai;
+      int aj;
+};
+
+int twoplayers(struct s_echiquier, SDL_Event, int, char *, SOCKET, int);
 
 #endif

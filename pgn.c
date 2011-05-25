@@ -1,6 +1,7 @@
 #include "pgn.h"
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <dirent.h>
 
 
 void pgn_out(char **mem, char *filename)
@@ -8,6 +9,7 @@ void pgn_out(char **mem, char *filename)
     int i, j, h, n;
     char *coup = malloc(90);
     FILE *out;
+    DIR *dir;
     time_t timestamp;
     char *date = calloc (0,30);
     char *mmh = malloc (250);
@@ -46,7 +48,11 @@ void pgn_out(char **mem, char *filename)
     j = 0;
     /* en-tête */
     mmh[0] = 's';mmh[1]='a';mmh[2]='v';mmh[3]='e';mmh[4]='/';mmh[5] = 0;
-    strcat(mmh, filename);    
+    strcat(mmh, filename);
+    if(!(dir = opendir("save")))
+      mkdir("save",0766);
+    else
+      closedir(dir);
     out = fopen (mmh,"w+");
     printf("%s\n",mmh);
     fwrite("[Event \"Soutenance\"]\n",1,21,out);

@@ -3,12 +3,14 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
+#include <dirent.h>
 #include "echiquier.h"
 #include "pieces.h"
 #include "deplace.h"
 #include "sdl.h"
 #include "sdl_event.h"
 #include "loop.h"
+#include "socketclient.h"
 
 struct s_bouton                                                       
 {                            
