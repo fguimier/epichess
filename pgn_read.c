@@ -319,16 +319,16 @@ void *search_cini(struct s_echiquier *e,char *coup, int j,
   if (coup[j] >'0' && coup[j]<'9')
     {
       for(;i < 9;i++)
-	given |= get_case(i, coup[j]-'1'); 
+	given |= get_case(coup[j]-'1', i); 
       j--;
     }
   if (coup[j] >='a' && coup[j]<'i')
     {
       for(;i < 9;i++)
-	given |= get_case(coup[j]-'a',i);
+	given |= get_case(i,coup[j]-'a');
       j--;
     }
-  printf("tertio\n");
+  printf("tertio : %c\n", coup[j]);
   switch(coup[j])
     {
     case 'K':
@@ -359,17 +359,22 @@ void *search_cini(struct s_echiquier *e,char *coup, int j,
 	  if ((given == zero && ((bfin & bb->possib[9]) != zero))||
 	      (given !=zero && ((bb->pieces[9] | given) == given)))
 	    res = b2c(e, bb->pieces[9]);
+	  else
+	    res = b2c(e, bb->pieces[10]);
 	}
       else
-	res = b2c(e, bb->pieces[10]);
-      break;
+	{
+	  res = b2c(e, bb->pieces[10]);
+	}
+	  break;
     case 'N':
       if ((bb->pieces[13] != zero) &&
-	  (((given == zero && bfin & bb->possib[13]) != zero)||
+	  (((given == zero) && ((bfin & bb->possib[13]) != zero))||
 	   (given !=zero && ((bb->pieces[13] | given) == given))))
 	res = b2c(e, bb->pieces[13]);
       else
 	res = b2c(e, bb->pieces[14]);
+      break;
     default :
       for(i=1;i <9;i++)
 	{
@@ -402,7 +407,7 @@ int updates(char * coup, struct s_echiquier *e,struct s_bb *bb_bl,
   bitboard bfin;
   /*trouver les cini et cfin*/
   printf("Primo\n");
-  if(*joueur == blanc)
+  if(*joueur == noir)
     {
       mem[i] = malloc(30);
       while(coup[j])

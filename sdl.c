@@ -50,39 +50,39 @@ void init_piece_sdl (struct s_echiquier *e, int i, int j)
     {
     case pion :
       if (e->mat[i][j].p->piece_color == blanc)
-	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WP.png");
-      else
 	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/BP.png");
+      else
+	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WP.png");
       break;
     case cavalier :
       if (e->mat[i][j].p->piece_color == blanc)
-	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WC.png");
-      else
 	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/BC.png");
+      else
+	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WC.png");
       break;
     case tour :
       if (e->mat[i][j].p->piece_color == blanc)
-	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WT.png");
-      else
 	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/BT.png");
+      else
+	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WT.png");
       break;
     case fou :
       if (e->mat[i][j].p->piece_color == blanc)
-	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WF.png");
-      else
 	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/BF.png");
+      else
+	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WF.png");
       break;
     case dame :
       if (e->mat[i][j].p->piece_color == blanc)
-	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WD.png");
-      else
 	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/BD.png");
+      else
+	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WD.png");
       break;
     case roi :
       if (e->mat[i][j].p->piece_color == blanc)
-	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WK.png");
-      else
 	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/BK.png");
+      else
+	e->mat[i][j].p->piece_sprite = IMG_Load("sprites/WK.png");
       break;
     }
    SDL_BlitSurface(e->mat[i][j].p->piece_sprite, NULL, e->screen, &pos);
@@ -268,8 +268,12 @@ void free_sdl(struct s_echiquier *e)
   for (i = 0; i < 8; i++)
     for (j = 0; j < 8; j++)
       {
+	printf("FU-%i-%i\n",i,j);
 	SDL_FreeSurface(e->mat[i][j].sprite);
 	if (e->mat[i][j].p)
-	  SDL_FreeSurface(e->mat[i][j].p->piece_sprite);
+	  {
+	    SDL_FreeSurface(e->mat[i][j].p->piece_sprite);
+	    printf("SION\n");
+	  }
       }
 }
