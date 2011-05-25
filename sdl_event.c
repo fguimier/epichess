@@ -245,7 +245,7 @@ int update(struct s_echiquier *e, struct s_case *cini,struct s_case *cfin,
   return i;
 }
 
-void twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
+int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
 {
   int i = 1;
   struct s_bb     bb_bl, bb_wh;/*0:pop;1-8:pions;9:tourgauch,10:cavgauch...
@@ -256,7 +256,7 @@ void twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
   struct s_deplace coup_pos[60];
   t_list dead = NULL;
   char **mem = calloc(500,sizeof(char *));
-  enum color joueur = blanc;
+  enum color joueur = noir;
   SDL_Surface *marque;
   /* sert a savoir si on click ou non */
   int click = 0;
@@ -304,6 +304,7 @@ void twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
 		decolo_sdl(&e);
 		cini = NULL;
 		click = 0;
+	/*ici on verifie que l'on a pas cliqu'e sur retour ou sauvegarder*/
 	      }
 	    else
 	      {
@@ -420,4 +421,5 @@ void twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save)
 	free(mem[i]);
     }
   free(mem);
+  return 0;
 }

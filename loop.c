@@ -29,9 +29,9 @@ int shellmon (SDL_Surface *patamon, int load, char *save)
 
     ech_print( &e );
 
-    twoplayers(e, event, load, save);
-      
+    i = twoplayers(e, event, load, save);
+    printf("Donc\n");
     free_sdl(&e);
     printf("Mmmh\n");
-    return 0;
+    return i;
 }
