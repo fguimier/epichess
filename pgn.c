@@ -1,4 +1,7 @@
 #include "pgn.h"
+#include <sys/stat.h>
+#include <sys/types.h>
+
 
 void pgn_out(char **mem, char *filename)
 {
@@ -7,6 +10,7 @@ void pgn_out(char **mem, char *filename)
     FILE *out;
     time_t timestamp;
     char *date = calloc (0,30);
+    char *mmh = malloc (250);
     char * tmp = malloc(5);
     struct tm * t;
     int z = 0;
@@ -41,17 +45,21 @@ void pgn_out(char **mem, char *filename)
     i = 1;
     j = 0;
     /* en-tête */
-    
-    strcat(filename); 
-    out = fopen (filename,"w+");
+    mmh[0] = 's';mmh[1]='a';mmh[2]='v';mmh[3]='e';mmh[4]='/';mmh[5] = 0;
+    strcat(mmh, filename);    
+    out = fopen (mmh,"w+");
+    printf("%s\n",mmh);
     fwrite("[Event \"Soutenance\"]\n",1,21,out);
     fwrite("[Site \"Villejuif\"]\n",1,19,out);
+    printf("%s\n",mmh);
     fwrite(date,1,20,out);
+printf("%s\n",mmh);
     fwrite("[Round \"2\"]\n",1,12,out);
     fwrite("[White \"Joueur, 1\"]\n",1,20,out);
     fwrite("[Event \"Joueur, 2\"]\n",1,20,out);
     fwrite("[Result \"*\"]\n",1,13,out);
     fwrite("\n",1,1,out);
+printf("%s\n",mmh);
     h = 0;
     /* corps */
     while (mem[i])
@@ -95,6 +103,7 @@ void pgn_out(char **mem, char *filename)
 		    h = n;
 		}
 	}
+    printf("%s\n",mmh);
     fclose(out);
     free(coup);
 }
