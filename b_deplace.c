@@ -9,28 +9,36 @@
 
 bitboard dep_knight (bitboard init, bitboard a)
 {
+    bitboard bigl, bigr;
+    bigl = LEFT_B | deplace_r(LEFT_B);
+    bigr = RIGHT_B | deplace_l(RIGHT_B);
     bitboard poss = 0;
-    if (!(init & deplace_r(LEFT_B)))
+    if (init & bigl)
     {
+        if (!(init & LEFT_B))
+        {
+            poss |= deplace_knight_bl(init);
+            poss |= deplace_knight_fl(init);
+        }
+    }else{
         poss |= deplace_knight_lf(init);
         poss |= deplace_knight_lb(init);
-    }
-    if (!(init & LEFT_B))
-    {
         poss |= deplace_knight_bl(init);
         poss |= deplace_knight_fl(init);
     }
-    if (!(init & deplace_l(RIGHT_B)))
+     if (init & bigr)
     {
+        if (!(init & RIGHT_B))
+        {
+            poss |= deplace_knight_br(init);
+            poss |= deplace_knight_fr(init);
+        }
+    }else{
         poss |= deplace_knight_rb(init);
         poss |= deplace_knight_rf(init);
-    }
-    if (!(init & RIGHT_B))
-    {
         poss |= deplace_knight_br(init);
         poss |= deplace_knight_fr(init);
     }
-
     return poss & ~a;
 }
 bitboard dep_queen (bitboard init,  bitboard e, bitboard a)
