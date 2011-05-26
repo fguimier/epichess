@@ -286,18 +286,18 @@ int twoplayers(struct s_echiquier e, SDL_Event event, int load, char *save, SOCK
   populate (&bb_bl, WHITE);
   populate (&bb_wh, BLACK);
   marque = init_marque_sdl();
-  /*bb_wh.pieces[1]=0x00;
-  bb_wh.pieces[9]=bb_wh.pieces[9]<<32;
-  bb_wh.pieces[9]=bb_wh.pieces[9]<<8;
-  print_ech(bb_wh.pieces[9]);
-  bb_wh.pieces[0]&= ~WHITE_P1;
-  bb_wh.pieces[0]&= ~WHITE_T1;
-  bb_wh.pieces[0]|=bb_wh.pieces[9];
-  calc_all_dep (&bb_wh, &bb_bl);
-  print_ech(bb_wh.possib[0]);
-  print_ech(bb_bl.possib[0]);
-  */
-  calc_all_dep(&bb_bl, &bb_wh);
+    for (; i < 15; i++)
+    {
+        bb_bl.pieces[i] = 0;
+        bb_wh.pieces[i] = 0;
+    }
+    bb_bl.pieces[15] = 0;
+    bb_wh.pieces[15] = deplace_f(deplace_f(deplace_f(1)));
+    bb_wh.pieces[9] = 0x100;
+    update_piece(&bb_wh);
+    update_piece(&bb_bl);
+    print_ech(bb_wh.pieces[0] | bb_bl.pieces[0]);
+    calc_all_dep(&bb_bl, &bb_wh);
       printf("Pre-inite OK\n");
   if(client)
       {
