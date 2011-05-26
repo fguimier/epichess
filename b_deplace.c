@@ -198,8 +198,6 @@ int checkmate (struct s_bb tocheck, struct s_bb ennemy)
 {
     int         i = 1, j = 1;
     struct s_bb ttocheck, tennemy;
-    ttocheck = tocheck;
-    tennemy = ennemy;
     if (!checkmate_base(tocheck, ennemy))
         return 0;
     for (; i < 17; i++)
@@ -209,14 +207,41 @@ int checkmate (struct s_bb tocheck, struct s_bb ennemy)
             tennemy = ennemy;
             if (tocheck.possib[i] & ennemy.pieces[j])
             {
-                tocheck.possib[i] = ennemy.pieces[j];
-                ennemy.pieces[j] = 0;
-                calc_all_dep(&tocheck, &ennemy);
-                if (!check(&tocheck, &ennemy))
+                ttocheck.possib[i] = ennemy.pieces[j];
+                tennemy.pieces[j] = 0;
+                calc_all_dep(&ttocheck, &tennemy);
+                if (!check(&ttocheck, &tennemy))
                     return 0;
             }
         }
     }
-
     return 1;
+}
+
+int big_checkmate (struct s_bb tocheck, struct s_bb ennemy)
+{
+    int                      p;
+    int                      k;
+    struct s_bb ttocheck, tennemy;
+    
+    for (p = 1; p < 17; p++)
+    {
+        if (ennemy.possib[p] & tocheck.pieces[16])
+        {
+            for (k = 1; k < 16; k++)
+            {
+                ttocheck = tocheck;
+                tennemy = ennemy;
+                if (ennemy.possib[p] & tocheck.possib[k])
+                {
+                    ttocheck.pieces[k] = ennemy.possib[p] & tocheck.possib[k];
+                    update_piece (&ttocheck);
+                    calc_all_dep(&ttocheck, &tennemy);
+                    if (!check(&ttocheck, &tennemy))
+                        return 0;
+                }
+            }
+        }
+    }
+    return 1;    
 }
